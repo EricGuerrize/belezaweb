@@ -53,17 +53,36 @@ export default function AnalyzePage() {
   const startCamera = async () => {
     try {
       setError(null)
+      // Verifica se getUserMedia está disponível
+      if (!navigator.mediaDevices || !navigator.mediaDevices.getUserMedia) {
+        setError('Seu navegador não suporta acesso à câmera. Tente usar um navegador mais recente.')
+        return
+      }
+      
       const stream = await navigator.mediaDevices.getUserMedia({
-        video: { facingMode: 'user', width: { ideal: 1280 }, height: { ideal: 720 } }
+        video: { 
+          facingMode: 'user',
+          width: { ideal: 1280, max: 1920 },
+          height: { ideal: 720, max: 1080 }
+        },
+        audio: false
       })
+      
       streamRef.current = stream
       if (videoRef.current) {
         videoRef.current.srcObject = stream
+        await videoRef.current.play()
         setShowCamera(true)
       }
-    } catch (err) {
-      setError('Não foi possível acessar a câmera. Verifique as permissões do navegador.')
+    } catch (err: any) {
       console.error('Erro ao acessar câmera:', err)
+      if (err.name === 'NotAllowedError' || err.name === 'PermissionDeniedError') {
+        setError('Permissão de câmera negada. Por favor, permita o acesso à câmera nas configurações do navegador.')
+      } else if (err.name === 'NotFoundError' || err.name === 'DevicesNotFoundError') {
+        setError('Nenhuma câmera encontrada. Verifique se há uma câmera conectada.')
+      } else {
+        setError('Não foi possível acessar a câmera. Verifique as permissões do navegador.')
+      }
     }
   }
 
@@ -173,32 +192,34 @@ export default function AnalyzePage() {
                 </div>
               ) : showCamera ? (
                 <div className="space-y-4">
-                  <div className="relative rounded-xl overflow-hidden bg-black">
+                  <div className="relative rounded-xl overflow-hidden bg-black aspect-[3/4] max-h-[70vh] flex items-center justify-center">
                     <video
                       ref={videoRef}
                       autoPlay
                       playsInline
-                      className="w-full h-auto max-h-96 object-contain mx-auto"
+                      muted
+                      className="w-full h-full object-cover"
                     />
                     <button
                       onClick={stopCamera}
-                      className="absolute top-4 right-4 w-10 h-10 rounded-full bg-black/50 hover:bg-black/70 flex items-center justify-center text-white transition-colors"
+                      className="absolute top-3 right-3 sm:top-4 sm:right-4 w-10 h-10 rounded-full bg-black/60 hover:bg-black/80 flex items-center justify-center text-white transition-colors z-10"
+                      aria-label="Fechar câmera"
                     >
                       <X className="w-5 h-5" />
                     </button>
                   </div>
-                  <div className="flex gap-3 sm:gap-4 justify-center">
+                  <div className="flex flex-col sm:flex-row gap-3 sm:gap-4">
                     <Button
                       variant="outline"
                       onClick={stopCamera}
-                      className="flex-1 sm:flex-none"
+                      className="w-full sm:flex-1"
                     >
                       Cancelar
                     </Button>
                     <Button
                       onClick={capturePhoto}
                       size="lg"
-                      className="flex-1 sm:flex-none"
+                      className="w-full sm:flex-1"
                     >
                       Capturar Foto
                     </Button>

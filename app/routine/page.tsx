@@ -18,7 +18,7 @@ export default function RoutinePage() {
   }
 
   return (
-    <div className="min-h-screen bg-background px-4 py-8">
+    <div className="min-h-screen bg-background px-3 sm:px-4 py-4 sm:py-6 md:py-8">
       <div className="container mx-auto max-w-5xl">
         {/* Header */}
         <motion.div

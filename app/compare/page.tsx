@@ -10,9 +10,9 @@ import Link from 'next/link'
 
 export default function ComparePage() {
   const metrics = [
-    { label: 'Hydration', before: mockAnalysis.hydration, after: mockAnalysisAfter.hydration, color: 'bg-blue-500' },
-    { label: 'Elasticity', before: mockAnalysis.elasticity, after: mockAnalysisAfter.elasticity, color: 'bg-purple-500' },
-    { label: 'Texture', before: mockAnalysis.texture, after: mockAnalysisAfter.texture, color: 'bg-teal-500' },
+    { label: 'Hidratação', before: mockAnalysis.hydration, after: mockAnalysisAfter.hydration, color: 'bg-blue-500' },
+    { label: 'Elasticidade', before: mockAnalysis.elasticity, after: mockAnalysisAfter.elasticity, color: 'bg-purple-500' },
+    { label: 'Textura', before: mockAnalysis.texture, after: mockAnalysisAfter.texture, color: 'bg-teal-500' },
   ]
 
   const getImprovement = (before: number, after: number) => {
@@ -25,7 +25,7 @@ export default function ComparePage() {
   }
 
   return (
-    <div className="min-h-screen bg-background px-4 py-8">
+    <div className="min-h-screen bg-background px-3 sm:px-4 py-4 sm:py-6 md:py-8">
       <div className="container mx-auto max-w-6xl">
         {/* Header */}
         <motion.div

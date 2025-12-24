@@ -13,15 +13,15 @@ interface AreaPosition {
 }
 
 const areas: AreaPosition[] = [
-  { concern: 'forehead', label: 'Forehead', position: { top: '15%', left: '50%' } },
-  { concern: 'temples', label: 'Temples', position: { top: '20%', left: '20%' } },
-  { concern: 'eyes', label: 'Eyes', position: { top: '35%', left: '25%' } },
-  { concern: 'cheeks', label: 'Cheeks', position: { top: '45%', left: '20%' } },
-  { concern: 'lips', label: 'Lips', position: { top: '60%', left: '50%' } },
-  { concern: 'neck', label: 'Neck', position: { top: '70%', left: '25%' } },
-  { concern: 'jawline', label: 'Jawline', position: { top: '55%', left: '75%' } },
-  { concern: 'chin', label: 'Chin', position: { top: '65%', left: '50%' } },
-  { concern: 'décolleté', label: 'Décolleté (neckline)', position: { top: '80%', left: '50%' } },
+  { concern: 'forehead', label: 'Testa', position: { top: '15%', left: '50%' } },
+  { concern: 'temples', label: 'Têmporas', position: { top: '20%', left: '20%' } },
+  { concern: 'eyes', label: 'Olhos', position: { top: '35%', left: '25%' } },
+  { concern: 'cheeks', label: 'Bochechas', position: { top: '45%', left: '20%' } },
+  { concern: 'lips', label: 'Lábios', position: { top: '60%', left: '50%' } },
+  { concern: 'neck', label: 'Pescoço', position: { top: '70%', left: '25%' } },
+  { concern: 'jawline', label: 'Mandíbula', position: { top: '55%', left: '75%' } },
+  { concern: 'chin', label: 'Queixo', position: { top: '65%', left: '50%' } },
+  { concern: 'décolleté', label: 'Décolleté', position: { top: '80%', left: '50%' } },
 ]
 
 export default function Step2() {
@@ -50,17 +50,17 @@ export default function Step2() {
         Se não tiver certeza, pode pressionar Continuar
       </p>
       
-      <div className="relative max-w-2xl mx-auto mb-4 sm:mb-6">
+      <div className="relative w-full max-w-md mx-auto mb-4 sm:mb-6">
         {/* Face Image Container */}
         <div className="relative aspect-[3/4] bg-gray-100 rounded-xl overflow-hidden">
           {/* Placeholder for face image - in production, use actual image */}
           <div className="w-full h-full flex items-center justify-center bg-gradient-to-br from-accent to-primary/20">
-                  <div className="text-center text-gray-500">
-                    <div className="w-16 h-16 md:w-24 md:h-24 mx-auto mb-2 rounded-full bg-gray-300 flex items-center justify-center">
-                      <div className="w-12 h-12 md:w-16 md:h-16 rounded-full bg-gray-400" />
-                    </div>
-                    <p className="text-xs md:text-sm">Imagem do Rosto</p>
-                  </div>
+            <div className="text-center text-gray-500">
+              <div className="w-20 h-20 sm:w-24 sm:h-24 md:w-32 md:h-32 mx-auto mb-2 rounded-full bg-gray-300 flex items-center justify-center">
+                <div className="w-12 h-12 sm:w-16 sm:h-16 md:w-20 md:h-20 rounded-full bg-gray-400" />
+              </div>
+              <p className="text-xs sm:text-sm">Imagem do Rosto</p>
+            </div>
           </div>
 
           {/* Interactive Checkboxes */}
@@ -85,7 +85,7 @@ export default function Step2() {
                 <button
                   onClick={() => toggleConcern(area.concern)}
                   className={`
-                    flex items-center gap-1 md:gap-2 px-2 md:px-3 py-1.5 md:py-2 rounded-lg border-2 transition-all
+                    flex items-center gap-1 sm:gap-2 px-2 sm:px-3 py-1.5 sm:py-2 rounded-lg border-2 transition-all text-xs sm:text-sm
                     ${isSelected
                       ? 'bg-primary border-primary text-white'
                       : 'bg-white border-gray-300 text-gray-700 hover:border-primary'
@@ -95,7 +95,7 @@ export default function Step2() {
                 >
                   <div
                     className={`
-                      w-3 h-3 md:w-4 md:h-4 rounded border-2 flex items-center justify-center flex-shrink-0
+                      w-3 h-3 sm:w-4 sm:h-4 rounded border-2 flex items-center justify-center flex-shrink-0
                       ${isSelected
                         ? 'border-white bg-white'
                         : 'border-gray-400 bg-white'
@@ -116,7 +116,7 @@ export default function Step2() {
                       </svg>
                     )}
                   </div>
-                  <span className="text-xs md:text-sm font-medium whitespace-nowrap">
+                  <span className="text-xs sm:text-sm font-medium whitespace-nowrap">
                     {area.label}
                   </span>
                 </button>

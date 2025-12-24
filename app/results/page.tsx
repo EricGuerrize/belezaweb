@@ -26,17 +26,17 @@ export default function ResultsPage() {
 
   const metrics = [
     {
-      label: 'Hydration',
+      label: 'Hidratação',
       value: mockAnalysis.hydration,
       color: 'bg-blue-500',
     },
     {
-      label: 'Elasticity',
+      label: 'Elasticidade',
       value: mockAnalysis.elasticity,
       color: 'bg-purple-500',
     },
     {
-      label: 'Texture',
+      label: 'Textura',
       value: mockAnalysis.texture,
       color: 'bg-teal-500',
     },
