@@ -140,12 +140,18 @@ export default function ResultsPage() {
               </p>
             </CardHeader>
             <CardContent className="p-4 sm:p-6">
-              <BeforeAfterSlider
-                beforeImage={capturedImage || 'data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMjAwIiBoZWlnaHQ9IjMwMCIgdmlld0JveD0iMCAwIDIwMCAzMDAiIGZpbGw9Im5vbmUiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyI+CjxyZWN0IHdpZHRoPSIyMDAiIGhlaWdodD0iMzAwIiBmaWxsPSIjRjNGNEY2Ii8+CjxlbGxpcHNlIGN4PSIxMDAiIGN5PSIxMDAiIHJ4PSI2MCIgcnk9IjcwIiBmaWxsPSIjRTVDN0VCIi8+CjxwYXRoIGQ9Ik00MCA4MCBRNDAgNDAgNjAgMzAgUTgwIDIwIDEwMCAyNSBRMTIwIDIwIDE0MCAzMCBRMTYwIDQwIDE2MCA4MCBMMTYwIDEwMCBRMTYwIDEyMCAxNDAgMTMwIEw2MCAxMzAgUTQwIDEyMCA0MCAxMDAgWiIgZmlsbD0iIzlDQTNBRiIvPgo8Y2lyY2xlIGN4PSI4MCIgY3k9IjkwIiByPSI4IiBmaWxsPSIjNEI1NTYzIi8+CjxjaXJjbGUgY3g9IjEyMCIgY3k9IjkwIiByPSI4IiBmaWxsPSIjNEI1NTYzIi8+CjxlbGxpcHNlIGN4PSIxMDAiIGN5PSIxMTAiIHJ4PSI0IiByeT0iOCIgZmlsbD0iI0QxRDVEQiIvPgo8cGF0aCBkPSJNOTAgMTI1IFE5MCAxMzUgMTAwIDEzNSBRMTEwIDEzNSAxMTAgMTI1IiBzdHJva2U9IiM5Q0EzQUYiIHN0cm9rZS13aWR0aD0iMiIgZmlsbD0ibm9uZSIgc3Ryb2tlLWxpbmVjYXA9InJvdW5kIi8+Cjwvc3ZnPg=='}
-                afterImage={capturedImage || 'data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMjAwIiBoZWlnaHQ9IjMwMCIgdmlld0JveD0iMCAwIDIwMCAzMDAiIGZpbGw9Im5vbmUiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyI+CjxyZWN0IHdpZHRoPSIyMDAiIGhlaWdodD0iMzAwIiBmaWxsPSIjRkZGRkZGIi8+CjxlbGxpcHNlIGN4PSIxMDAiIGN5PSIxMDAiIHJ4PSI2MCIgcnk9IjcwIiBmaWxsPSIjRkZFRUZGIi8+CjxwYXRoIGQ9Ik00MCA4MCBRNDAgNDAgNjAgMzAgUTgwIDIwIDEwMCAyNSBRMTIwIDIwIDE0MCAzMCBRMTYwIDQwIDE2MCA4MCBMMTYwIDEwMCBRMTYwIDEyMCAxNDAgMTMwIEw2MCAxMzAgUTQwIDEyMCA0MCAxMDAgWiIgZmlsbD0iI0VDNzJOTiIvPgo8Y2lyY2xlIGN4PSI4MCIgY3k9IjkwIiByPSI4IiBmaWxsPSIjRkY2QkI3Ii8+CjxjaXJjbGUgY3g9IjEyMCIgY3k9IjkwIiByPSI4IiBmaWxsPSIjRkY2QkI3Ii8+CjxlbGxpcHNlIGN4PSIxMDAiIGN5PSIxMTAiIHJ4PSI0IiByeT0iOCIgZmlsbD0iI0ZGRUZGRiIvPgo8cGF0aCBkPSJNOTAgMTI1IFE5MCAxMzUgMTAwIDEzNSBRMTEwIDEzNSAxMTAgMTI1IiBzdHJva2U9IiNFRjcyOTkiIHN0cm9rZS13aWR0aD0iMiIgZmlsbD0ibm9uZSIgc3Ryb2tlLWxpbmVjYXA9InJvdW5kIi8+Cjwvc3ZnPg=='
-                beforeLabel="Como está"
-                afterLabel="Como ficará"
-              />
+              {capturedImage ? (
+                <BeforeAfterSlider
+                  beforeImage={capturedImage}
+                  afterImage={capturedImage}
+                  beforeLabel="Como está"
+                  afterLabel="Como ficará"
+                />
+              ) : (
+                <div className="relative aspect-[3/4] bg-gray-100 rounded-xl overflow-hidden flex items-center justify-center">
+                  <p className="text-gray-500 text-sm">Faça upload de uma foto para ver a comparação</p>
+                </div>
+              )}
             </CardContent>
           </Card>
         </motion.div>

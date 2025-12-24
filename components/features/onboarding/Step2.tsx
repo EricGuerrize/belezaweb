@@ -6,8 +6,11 @@ import { Button } from '@/components/ui/button'
 import { motion } from 'framer-motion'
 import { useState } from 'react'
 
+// Tipo específico para áreas faciais (subconjunto de SkinConcern)
+type FacialArea = 'forehead' | 'temples' | 'eyes' | 'cheeks' | 'lips' | 'neck' | 'jawline' | 'chin' | 'décolleté'
+
 interface AreaPosition {
-  concern: SkinConcern
+  concern: FacialArea
   label: string
   position: { top: string; left: string }
 }
@@ -26,17 +29,17 @@ const areas: AreaPosition[] = [
 
 export default function Step2() {
   const { data, updateData } = useOnboardingStore()
-  const [hoveredArea, setHoveredArea] = useState<SkinConcern | null>(null)
+  const [hoveredArea, setHoveredArea] = useState<FacialArea | null>(null)
 
-  const toggleConcern = (concern: SkinConcern) => {
+  const toggleConcern = (concern: FacialArea) => {
     const currentConcerns = data.concerns || []
-    if (currentConcerns.includes(concern)) {
+    if (currentConcerns.includes(concern as SkinConcern)) {
       updateData({
-        concerns: currentConcerns.filter((c) => c !== concern),
+        concerns: currentConcerns.filter((c) => c !== concern) as SkinConcern[],
       })
     } else {
       updateData({
-        concerns: [...currentConcerns, concern],
+        concerns: [...currentConcerns, concern as SkinConcern],
       })
     }
   }
