@@ -6,11 +6,13 @@ import { Button } from '@/components/ui/button'
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
 import { Progress } from '@/components/ui/progress'
 import { mockAnalysis } from '@/lib/mock-data/skin-analysis'
+import { useImageStore } from '@/store/image-store'
 import { motion } from 'framer-motion'
 import { Target, TrendingUp } from 'lucide-react'
 
 export default function ResultsPage() {
   const router = useRouter()
+  const { capturedImage } = useImageStore()
 
   const getScoreColor = (score: number) => {
     if (score >= 80) return 'text-success'
@@ -105,27 +107,91 @@ export default function ResultsPage() {
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.6, delay: 0.2 }}
-          className="mb-8"
+          className="mb-6 sm:mb-8"
         >
           <Card>
-            <CardContent className="pt-6">
+            <CardContent className="p-3 sm:p-4 md:pt-6">
               <div className="relative aspect-[3/4] max-w-md mx-auto bg-gray-100 rounded-xl overflow-hidden">
-                {/* Placeholder for face image with overlay */}
-                <div className="w-full h-full flex items-center justify-center bg-gradient-to-br from-accent to-primary/20 relative">
-                  {/* Simulated analysis overlay */}
-                  <div className="absolute inset-0 opacity-30">
-                    <div className="absolute top-[15%] left-[50%] w-20 h-20 bg-blue-500/50 rounded-full blur-xl" />
-                    <div className="absolute top-[35%] left-[25%] w-16 h-16 bg-purple-500/50 rounded-full blur-xl" />
-                    <div className="absolute top-[45%] left-[20%] w-24 h-24 bg-blue-500/50 rounded-full blur-xl" />
-                    <div className="absolute top-[55%] left-[75%] w-18 h-18 bg-purple-500/50 rounded-full blur-xl" />
-                  </div>
-                  <div className="text-center text-gray-500 relative z-10">
-                    <div className="w-16 h-16 mx-auto mb-2 rounded-full bg-gray-300 flex items-center justify-center">
-                      <div className="w-12 h-12 rounded-full bg-gray-400" />
+                {capturedImage ? (
+                  <>
+                    {/* User's captured photo */}
+                    <img
+                      src={capturedImage}
+                      alt="Sua análise facial"
+                      className="w-full h-full object-cover"
+                    />
+                    {/* Analysis overlay */}
+                    <div className="absolute inset-0 opacity-20 pointer-events-none">
+                      <motion.div
+                        className="absolute top-[15%] left-[50%] w-16 h-16 sm:w-20 sm:h-20 bg-blue-500/60 rounded-full blur-xl"
+                        animate={{
+                          scale: [1, 1.1, 1],
+                          opacity: [0.6, 0.8, 0.6],
+                        }}
+                        transition={{
+                          duration: 3,
+                          repeat: Infinity,
+                          ease: 'easeInOut',
+                        }}
+                      />
+                      <motion.div
+                        className="absolute top-[35%] left-[25%] w-12 h-12 sm:w-16 sm:h-16 bg-purple-500/60 rounded-full blur-xl"
+                        animate={{
+                          scale: [1, 1.15, 1],
+                          opacity: [0.5, 0.7, 0.5],
+                        }}
+                        transition={{
+                          duration: 3.5,
+                          repeat: Infinity,
+                          ease: 'easeInOut',
+                          delay: 0.5,
+                        }}
+                      />
+                      <motion.div
+                        className="absolute top-[45%] left-[20%] w-20 h-20 sm:w-24 sm:h-24 bg-blue-500/60 rounded-full blur-xl"
+                        animate={{
+                          scale: [1, 1.2, 1],
+                          opacity: [0.6, 0.9, 0.6],
+                        }}
+                        transition={{
+                          duration: 4,
+                          repeat: Infinity,
+                          ease: 'easeInOut',
+                          delay: 1,
+                        }}
+                      />
+                      <motion.div
+                        className="absolute top-[55%] left-[75%] w-14 h-14 sm:w-18 sm:h-18 bg-purple-500/60 rounded-full blur-xl"
+                        animate={{
+                          scale: [1, 1.1, 1],
+                          opacity: [0.5, 0.8, 0.5],
+                        }}
+                        transition={{
+                          duration: 3.2,
+                          repeat: Infinity,
+                          ease: 'easeInOut',
+                          delay: 1.5,
+                        }}
+                      />
                     </div>
-                    <p className="text-sm">Análise Facial</p>
+                  </>
+                ) : (
+                  /* Placeholder */
+                  <div className="w-full h-full flex items-center justify-center bg-gradient-to-br from-accent to-primary/20 relative">
+                    <div className="absolute inset-0 opacity-30">
+                      <div className="absolute top-[15%] left-[50%] w-20 h-20 bg-blue-500/50 rounded-full blur-xl" />
+                      <div className="absolute top-[35%] left-[25%] w-16 h-16 bg-purple-500/50 rounded-full blur-xl" />
+                      <div className="absolute top-[45%] left-[20%] w-24 h-24 bg-blue-500/50 rounded-full blur-xl" />
+                      <div className="absolute top-[55%] left-[75%] w-18 h-18 bg-purple-500/50 rounded-full blur-xl" />
+                    </div>
+                    <div className="text-center text-gray-500 relative z-10">
+                      <div className="w-12 h-12 sm:w-16 sm:h-16 mx-auto mb-2 rounded-full bg-gray-300 flex items-center justify-center">
+                        <div className="w-8 h-8 sm:w-12 sm:h-12 rounded-full bg-gray-400" />
+                      </div>
+                      <p className="text-xs sm:text-sm">Análise Facial</p>
+                    </div>
                   </div>
-                </div>
+                )}
               </div>
             </CardContent>
           </Card>
@@ -174,11 +240,11 @@ export default function ResultsPage() {
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
           transition={{ duration: 0.6, delay: 0.6 }}
-          className="mb-8"
+          className="mb-6 sm:mb-8"
         >
           <Card className="bg-accent/50">
-            <CardContent className="pt-6">
-              <p className="text-gray-700">
+            <CardContent className="p-3 sm:p-4 md:pt-6">
+              <p className="text-sm sm:text-base text-gray-700 leading-relaxed">
                 Seu relatório de <span className="font-semibold text-primary">Hidratação da Pele</span> indica que sua pele poderia se beneficiar de uma hidratação mais profunda para restaurar seu brilho saudável.
               </p>
             </CardContent>

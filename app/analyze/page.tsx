@@ -6,10 +6,12 @@ import { Button } from '@/components/ui/button'
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
 import { motion } from 'framer-motion'
 import { Upload, Camera, Shield, X } from 'lucide-react'
+import { useImageStore } from '@/store/image-store'
 
 export default function AnalyzePage() {
   const router = useRouter()
-  const [image, setImage] = useState<string | null>(null)
+  const { capturedImage, setCapturedImage } = useImageStore()
+  const [image, setImage] = useState<string | null>(capturedImage)
   const [isDragging, setIsDragging] = useState(false)
   const [showCamera, setShowCamera] = useState(false)
   const [error, setError] = useState<string | null>(null)
@@ -23,7 +25,9 @@ export default function AnalyzePage() {
     if (file && file.type.startsWith('image/')) {
       const reader = new FileReader()
       reader.onloadend = () => {
-        setImage(reader.result as string)
+        const imageData = reader.result as string
+        setImage(imageData)
+        setCapturedImage(imageData)
       }
       reader.readAsDataURL(file)
     }
@@ -105,6 +109,7 @@ export default function AnalyzePage() {
         ctx.drawImage(video, 0, 0)
         const dataUrl = canvas.toDataURL('image/jpeg')
         setImage(dataUrl)
+        setCapturedImage(dataUrl)
         stopCamera()
       }
     }

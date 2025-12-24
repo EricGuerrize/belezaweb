@@ -2,10 +2,12 @@
 const nextConfig = {
   images: {
     remotePatterns: [
-      {
-        protocol: 'https',
-        hostname: '**',
-      },
+      // Adicione aqui domínios específicos quando necessário
+      // Exemplo:
+      // {
+      //   protocol: 'https',
+      //   hostname: 'exemplo.com',
+      // },
     ],
   },
 }

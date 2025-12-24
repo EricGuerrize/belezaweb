@@ -1,10 +1,12 @@
 'use client'
 
 import { useOnboardingStore } from '@/store/onboarding-store'
+import { useImageStore } from '@/store/image-store'
 import { SkinConcern } from '@/lib/mock-data/onboarding'
 import { Button } from '@/components/ui/button'
 import { motion } from 'framer-motion'
 import { useState } from 'react'
+import Image from 'next/image'
 
 interface AreaPosition {
   concern: SkinConcern
@@ -26,6 +28,7 @@ const areas: AreaPosition[] = [
 
 export default function Step2() {
   const { data, updateData } = useOnboardingStore()
+  const { capturedImage } = useImageStore()
   const [hoveredArea, setHoveredArea] = useState<SkinConcern | null>(null)
 
   const toggleConcern = (concern: SkinConcern) => {
@@ -43,25 +46,79 @@ export default function Step2() {
 
   return (
     <div>
-      <h3 className="text-lg sm:text-xl md:text-2xl font-heading mb-2">
+      <h3 className="text-base sm:text-lg md:text-xl font-heading mb-2">
         Quais áreas você gostaria de melhorar?
       </h3>
-      <p className="text-sm sm:text-base text-gray-600 mb-4">
-        Se não tiver certeza, pode pressionar Continuar
+      <p className="text-xs sm:text-sm text-gray-600 mb-3 sm:mb-4">
+        Toque nas áreas do rosto que deseja melhorar
       </p>
-      
+
       <div className="relative w-full max-w-md mx-auto mb-4 sm:mb-6">
         {/* Face Image Container */}
         <div className="relative aspect-[3/4] bg-gray-100 rounded-xl overflow-hidden">
-          {/* Placeholder for face image - in production, use actual image */}
-          <div className="w-full h-full flex items-center justify-center bg-gradient-to-br from-accent to-primary/20">
-            <div className="text-center text-gray-500">
-              <div className="w-20 h-20 sm:w-24 sm:h-24 md:w-32 md:h-32 mx-auto mb-2 rounded-full bg-gray-300 flex items-center justify-center">
-                <div className="w-12 h-12 sm:w-16 sm:h-16 md:w-20 md:h-20 rounded-full bg-gray-400" />
+          {capturedImage ? (
+            <>
+              {/* User's captured photo */}
+              <img
+                src={capturedImage}
+                alt="Sua foto"
+                className="w-full h-full object-cover"
+              />
+
+              {/* Highlight overlays for selected areas */}
+              {areas.map((area) => {
+                const isSelected = data.concerns?.includes(area.concern) || false
+                if (!isSelected) return null
+
+                return (
+                  <motion.div
+                    key={`highlight-${area.concern}`}
+                    className="absolute pointer-events-none"
+                    style={{
+                      top: area.position.top,
+                      left: area.position.left,
+                      transform: 'translate(-50%, -50%)',
+                    }}
+                    initial={{ scale: 0, opacity: 0 }}
+                    animate={{ scale: 1, opacity: 1 }}
+                    exit={{ scale: 0, opacity: 0 }}
+                  >
+                    <div className="relative">
+                      {/* Pulsing ring */}
+                      <motion.div
+                        className="absolute inset-0 rounded-full bg-primary/30 blur-md"
+                        style={{ width: '60px', height: '60px', marginLeft: '-30px', marginTop: '-30px' }}
+                        animate={{
+                          scale: [1, 1.2, 1],
+                          opacity: [0.6, 0.3, 0.6],
+                        }}
+                        transition={{
+                          duration: 2,
+                          repeat: Infinity,
+                          ease: 'easeInOut',
+                        }}
+                      />
+                      {/* Static circle */}
+                      <div
+                        className="rounded-full border-2 border-primary bg-primary/20"
+                        style={{ width: '50px', height: '50px', marginLeft: '-25px', marginTop: '-25px' }}
+                      />
+                    </div>
+                  </motion.div>
+                )
+              })}
+            </>
+          ) : (
+            /* Placeholder for face image */
+            <div className="w-full h-full flex items-center justify-center bg-gradient-to-br from-accent to-primary/20">
+              <div className="text-center text-gray-500">
+                <div className="w-20 h-20 sm:w-24 sm:h-24 md:w-32 md:h-32 mx-auto mb-2 rounded-full bg-gray-300 flex items-center justify-center">
+                  <div className="w-12 h-12 sm:w-16 sm:h-16 md:w-20 md:h-20 rounded-full bg-gray-400" />
+                </div>
+                <p className="text-xs sm:text-sm">Imagem do Rosto</p>
               </div>
-              <p className="text-xs sm:text-sm">Imagem do Rosto</p>
             </div>
-          </div>
+          )}
 
           {/* Interactive Checkboxes */}
           {areas.map((area) => {
@@ -71,7 +128,7 @@ export default function Step2() {
             return (
               <motion.div
                 key={area.concern}
-                className="absolute"
+                className="absolute z-10"
                 style={{
                   top: area.position.top,
                   left: area.position.left,
@@ -79,23 +136,24 @@ export default function Step2() {
                 }}
                 onHoverStart={() => setHoveredArea(area.concern)}
                 onHoverEnd={() => setHoveredArea(null)}
-                whileHover={{ scale: 1.1 }}
+                whileHover={{ scale: 1.05 }}
                 whileTap={{ scale: 0.95 }}
               >
                 <button
                   onClick={() => toggleConcern(area.concern)}
                   className={`
-                    flex items-center gap-1 sm:gap-2 px-2 sm:px-3 py-1.5 sm:py-2 rounded-lg border-2 transition-all text-xs sm:text-sm
+                    flex items-center gap-1 px-1.5 py-1 sm:px-2 sm:py-1.5 rounded-md sm:rounded-lg border-2 transition-all text-[10px] sm:text-xs
                     ${isSelected
-                      ? 'bg-primary border-primary text-white'
-                      : 'bg-white border-gray-300 text-gray-700 hover:border-primary'
+                      ? 'bg-primary border-primary text-white shadow-md'
+                      : 'bg-white/95 border-gray-300 text-gray-700 hover:border-primary backdrop-blur-sm'
                     }
                     ${isHovered ? 'shadow-lg' : ''}
                   `}
+                  aria-label={`Selecionar ${area.label}`}
                 >
                   <div
                     className={`
-                      w-3 h-3 sm:w-4 sm:h-4 rounded border-2 flex items-center justify-center flex-shrink-0
+                      w-2.5 h-2.5 sm:w-3 sm:h-3 rounded border flex items-center justify-center flex-shrink-0
                       ${isSelected
                         ? 'border-white bg-white'
                         : 'border-gray-400 bg-white'
@@ -104,7 +162,7 @@ export default function Step2() {
                   >
                     {isSelected && (
                       <svg
-                        className="w-2 h-2 md:w-3 md:h-3 text-primary"
+                        className="w-1.5 h-1.5 sm:w-2 sm:h-2 text-primary"
                         fill="currentColor"
                         viewBox="0 0 20 20"
                       >
@@ -116,7 +174,7 @@ export default function Step2() {
                       </svg>
                     )}
                   </div>
-                  <span className="text-xs sm:text-sm font-medium whitespace-nowrap">
+                  <span className="text-[10px] sm:text-xs font-medium whitespace-nowrap leading-tight">
                     {area.label}
                   </span>
                 </button>
@@ -128,22 +186,30 @@ export default function Step2() {
 
       {/* Selected Areas Summary */}
       {data.concerns && data.concerns.length > 0 && (
-        <div className="mt-4 sm:mt-6 p-3 sm:p-4 bg-accent rounded-lg">
-          <p className="text-xs sm:text-sm font-medium mb-2">Áreas selecionadas:</p>
-          <div className="flex flex-wrap gap-2">
+        <motion.div
+          initial={{ opacity: 0, y: 10 }}
+          animate={{ opacity: 1, y: 0 }}
+          className="mt-3 sm:mt-4 p-3 sm:p-4 bg-accent/50 rounded-lg border border-primary/20"
+        >
+          <p className="text-xs sm:text-sm font-medium mb-2 text-gray-700">
+            {data.concerns.length} {data.concerns.length === 1 ? 'área selecionada' : 'áreas selecionadas'}:
+          </p>
+          <div className="flex flex-wrap gap-1.5 sm:gap-2">
             {data.concerns.map((concern) => {
               const area = areas.find((a) => a.concern === concern)
               return (
-                <span
+                <motion.span
                   key={concern}
-                  className="px-2 sm:px-3 py-1 bg-primary text-white rounded-full text-xs sm:text-sm"
+                  initial={{ scale: 0 }}
+                  animate={{ scale: 1 }}
+                  className="px-2 sm:px-3 py-0.5 sm:py-1 bg-primary text-white rounded-full text-[10px] sm:text-xs font-medium"
                 >
                   {area?.label || concern}
-                </span>
+                </motion.span>
               )
             })}
           </div>
-        </div>
+        </motion.div>
       )}
     </div>
   )
