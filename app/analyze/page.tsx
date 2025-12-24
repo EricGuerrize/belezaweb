@@ -3,23 +3,21 @@
 import { useState, useRef, useEffect } from 'react'
 import { useRouter } from 'next/navigation'
 import { Button } from '@/components/ui/button'
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
+import { Card, CardContent } from '@/components/ui/card'
 import { motion } from 'framer-motion'
-import { Upload, Camera, Shield, X } from 'lucide-react'
+import { Upload, Camera, Shield } from 'lucide-react'
 import { useImageStore } from '@/store/image-store'
+import BackButton from '@/components/navigation/BackButton'
 
 export default function AnalyzePage() {
   const router = useRouter()
   const { capturedImage, setCapturedImage } = useImageStore()
   const [image, setImage] = useState<string | null>(capturedImage)
   const [isDragging, setIsDragging] = useState(false)
-  const [showCamera, setShowCamera] = useState(false)
   const [error, setError] = useState<string | null>(null)
+  const [isUploading, setIsUploading] = useState(false)
   const fileInputRef = useRef<HTMLInputElement>(null)
   const cameraInputRef = useRef<HTMLInputElement>(null)
-  const videoRef = useRef<HTMLVideoElement>(null)
-  const streamRef = useRef<MediaStream | null>(null)
-  const canvasRef = useRef<HTMLCanvasElement>(null)
 
   const handleFileSelect = (file: File) => {
     if (file && file.type.startsWith('image/')) {
@@ -28,8 +26,14 @@ export default function AnalyzePage() {
         const imageData = reader.result as string
         setImage(imageData)
         setCapturedImage(imageData)
+        setError(null)
+      }
+      reader.onerror = () => {
+        setError('Erro ao ler o arquivo. Tente novamente.')
       }
       reader.readAsDataURL(file)
+    } else {
+      setError('Por favor, selecione uma imagem válida.')
     }
   }
 
@@ -52,84 +56,79 @@ export default function AnalyzePage() {
   const handleFileInput = (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0]
     if (file) handleFileSelect(file)
+    // Reset input para permitir selecionar o mesmo arquivo novamente
+    e.target.value = ''
   }
 
-  const startCamera = async () => {
+  const handleCameraInput = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0]
+    if (file) handleFileSelect(file)
+    // Reset input
+    e.target.value = ''
+  }
+
+  const handleAnalyze = async () => {
+    if (!image) {
+      setError('Por favor, selecione ou tire uma foto primeiro.')
+      return
+    }
+
+    setIsUploading(true)
+    setError(null)
+
     try {
-      setError(null)
-      // Verifica se getUserMedia está disponível
-      if (!navigator.mediaDevices || !navigator.mediaDevices.getUserMedia) {
-        setError('Seu navegador não suporta acesso à câmera. Tente usar um navegador mais recente.')
-        return
+      // Converter base64 para blob
+      const base64Data = image.includes(',') ? image.split(',')[1] : image
+      const byteCharacters = atob(base64Data)
+      const byteNumbers = new Array(byteCharacters.length)
+      for (let i = 0; i < byteCharacters.length; i++) {
+        byteNumbers[i] = byteCharacters.charCodeAt(i)
+      }
+      const byteArray = new Uint8Array(byteNumbers)
+      const blob = new Blob([byteArray], { type: 'image/jpeg' })
+      
+      const formData = new FormData()
+      formData.append('image', blob, 'photo.jpg')
+      
+      // Obter dados do onboarding
+      const onboardingData = localStorage.getItem('onboardingData')
+      if (onboardingData) {
+        formData.append('onboardingData', onboardingData)
       }
       
-      const stream = await navigator.mediaDevices.getUserMedia({
-        video: { 
-          facingMode: 'user',
-          width: { ideal: 1280, max: 1920 },
-          height: { ideal: 720, max: 1080 }
-        },
-        audio: false
+      // Enviar para API
+      const apiResponse = await fetch('/api/analyze', {
+        method: 'POST',
+        body: formData,
       })
+
+      if (!apiResponse.ok) {
+        const errorData = await apiResponse.json().catch(() => ({}))
+        throw new Error(errorData.error || 'Erro ao processar análise')
+      }
+
+      const result = await apiResponse.json()
       
-      streamRef.current = stream
-      if (videoRef.current) {
-        videoRef.current.srcObject = stream
-        await videoRef.current.play()
-        setShowCamera(true)
-      }
-    } catch (err: any) {
-      console.error('Erro ao acessar câmera:', err)
-      if (err.name === 'NotAllowedError' || err.name === 'PermissionDeniedError') {
-        setError('Permissão de câmera negada. Por favor, permita o acesso à câmera nas configurações do navegador.')
-      } else if (err.name === 'NotFoundError' || err.name === 'DevicesNotFoundError') {
-        setError('Nenhuma câmera encontrada. Verifique se há uma câmera conectada.')
-      } else {
-        setError('Não foi possível acessar a câmera. Verifique as permissões do navegador.')
-      }
-    }
-  }
+      // Salvar resultado no localStorage
+      localStorage.setItem('analysisResult', JSON.stringify(result.analysis))
 
-  const stopCamera = () => {
-    if (streamRef.current) {
-      streamRef.current.getTracks().forEach(track => track.stop())
-      streamRef.current = null
-    }
-    setShowCamera(false)
-  }
-
-  const capturePhoto = () => {
-    if (videoRef.current && canvasRef.current) {
-      const canvas = canvasRef.current
-      const video = videoRef.current
-      canvas.width = video.videoWidth
-      canvas.height = video.videoHeight
-      const ctx = canvas.getContext('2d')
-      if (ctx) {
-        ctx.drawImage(video, 0, 0)
-        const dataUrl = canvas.toDataURL('image/jpeg')
-        setImage(dataUrl)
-        setCapturedImage(dataUrl)
-        stopCamera()
-      }
-    }
-  }
-
-  useEffect(() => {
-    return () => {
-      stopCamera()
-    }
-  }, [])
-
-  const handleAnalyze = () => {
-    if (image) {
+      // Redirecionar para página de análise
       router.push('/analyzing')
+    } catch (err: any) {
+      console.error('Erro ao analisar:', err)
+      setError(err.message || 'Erro ao processar a análise. Tente novamente.')
+      setIsUploading(false)
     }
   }
 
   return (
     <div className="min-h-screen bg-background px-3 sm:px-4 py-4 sm:py-6 md:py-8">
       <div className="container mx-auto max-w-4xl">
+        {/* Back Button */}
+        <div className="mb-4">
+          <BackButton href="/onboarding" />
+        </div>
+
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
@@ -178,7 +177,7 @@ export default function AnalyzePage() {
                       </Button>
                       <Button
                         variant="default"
-                        onClick={startCamera}
+                        onClick={() => cameraInputRef.current?.click()}
                         className="flex items-center justify-center gap-2 w-full"
                       >
                         <Camera className="w-4 h-4 sm:w-5 sm:h-5" />
@@ -192,42 +191,14 @@ export default function AnalyzePage() {
                       onChange={handleFileInput}
                       className="hidden"
                     />
-                    <canvas ref={canvasRef} className="hidden" />
-                  </div>
-                </div>
-              ) : showCamera ? (
-                <div className="space-y-4">
-                  <div className="relative rounded-xl overflow-hidden bg-black aspect-[3/4] max-h-[70vh] flex items-center justify-center">
-                    <video
-                      ref={videoRef}
-                      autoPlay
-                      playsInline
-                      muted
-                      className="w-full h-full object-cover"
+                    <input
+                      ref={cameraInputRef}
+                      type="file"
+                      accept="image/*"
+                      capture="user"
+                      onChange={handleCameraInput}
+                      className="hidden"
                     />
-                    <button
-                      onClick={stopCamera}
-                      className="absolute top-3 right-3 sm:top-4 sm:right-4 w-10 h-10 rounded-full bg-black/60 hover:bg-black/80 flex items-center justify-center text-white transition-colors z-10"
-                      aria-label="Fechar câmera"
-                    >
-                      <X className="w-5 h-5" />
-                    </button>
-                  </div>
-                  <div className="flex flex-col sm:flex-row gap-3 sm:gap-4">
-                    <Button
-                      variant="outline"
-                      onClick={stopCamera}
-                      className="w-full sm:flex-1"
-                    >
-                      Cancelar
-                    </Button>
-                    <Button
-                      onClick={capturePhoto}
-                      size="lg"
-                      className="w-full sm:flex-1"
-                    >
-                      Capturar Foto
-                    </Button>
                   </div>
                 </div>
               ) : (
@@ -250,8 +221,13 @@ export default function AnalyzePage() {
                     >
                       Trocar foto
                     </Button>
-                    <Button onClick={handleAnalyze} size="lg" className="w-full sm:w-auto">
-                      Analisar minha pele
+                    <Button 
+                      onClick={handleAnalyze} 
+                      size="lg" 
+                      className="w-full sm:w-auto"
+                      disabled={isUploading}
+                    >
+                      {isUploading ? 'Processando...' : 'Analisar minha pele'}
                     </Button>
                   </div>
                 </div>

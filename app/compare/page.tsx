@@ -7,6 +7,7 @@ import { mockAnalysis, mockAnalysisAfter } from '@/lib/mock-data/skin-analysis'
 import { motion } from 'framer-motion'
 import { TrendingUp } from 'lucide-react'
 import Link from 'next/link'
+import BackButton from '@/components/navigation/BackButton'
 
 export default function ComparePage() {
   const metrics = [
@@ -27,6 +28,11 @@ export default function ComparePage() {
   return (
     <div className="min-h-screen bg-background px-3 sm:px-4 py-4 sm:py-6 md:py-8">
       <div className="container mx-auto max-w-6xl">
+        {/* Back Button */}
+        <div className="mb-4">
+          <BackButton href="/results" />
+        </div>
+
         {/* Header */}
         <motion.div
           initial={{ opacity: 0, y: 20 }}

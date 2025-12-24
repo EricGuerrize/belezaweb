@@ -5,6 +5,7 @@ import { useRouter } from 'next/navigation'
 import { motion } from 'framer-motion'
 import { Card, CardContent } from '@/components/ui/card'
 import { Progress } from '@/components/ui/progress'
+import BackButton from '@/components/navigation/BackButton'
 
 const analyzingSteps = [
   'Detectando rosto na imagem...',
@@ -56,8 +57,12 @@ export default function AnalyzingPage() {
 
   return (
     <div className="min-h-screen bg-background flex items-center justify-center px-3 sm:px-4 py-4 sm:py-6">
-      <Card className="w-full max-w-2xl">
-        <CardContent className="pt-8 sm:pt-10 md:pt-12 pb-8 sm:pb-10 md:pb-12 p-4 sm:p-6">
+      <div className="w-full max-w-2xl">
+        <div className="mb-4">
+          <BackButton onClick={() => router.push('/analyze')} />
+        </div>
+        <Card className="w-full">
+          <CardContent className="pt-8 sm:pt-10 md:pt-12 pb-8 sm:pb-10 md:pb-12 p-4 sm:p-6">
           <div className="text-center space-y-6 sm:space-y-8">
             {/* Animated Face Icon */}
             <motion.div
@@ -104,7 +109,8 @@ export default function AnalyzingPage() {
             </div>
           </div>
         </CardContent>
-      </Card>
+        </Card>
+      </div>
     </div>
   )
 }

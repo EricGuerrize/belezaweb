@@ -5,6 +5,7 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/com
 import { mockAnalysis } from '@/lib/mock-data/skin-analysis'
 import { motion } from 'framer-motion'
 import { Check, Sparkles, Target, TrendingUp, Shield } from 'lucide-react'
+import BackButton from '@/components/navigation/BackButton'
 
 export default function OfferPage() {
   const benefits = [
@@ -17,6 +18,11 @@ export default function OfferPage() {
   return (
     <div className="min-h-screen bg-background px-3 sm:px-4 py-4 sm:py-6 md:py-8">
       <div className="container mx-auto max-w-5xl">
+        {/* Back Button */}
+        <div className="mb-4">
+          <BackButton href="/routine" />
+        </div>
+
         {/* Header */}
         <motion.div
           initial={{ opacity: 0, y: 20 }}

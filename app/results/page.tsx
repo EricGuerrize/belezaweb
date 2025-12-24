@@ -6,13 +6,28 @@ import { Button } from '@/components/ui/button'
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
 import { Progress } from '@/components/ui/progress'
 import { mockAnalysis } from '@/lib/mock-data/skin-analysis'
+import { useEffect, useState } from 'react'
 import { useImageStore } from '@/store/image-store'
 import { motion } from 'framer-motion'
 import { Target, TrendingUp } from 'lucide-react'
+import BackButton from '@/components/navigation/BackButton'
 
 export default function ResultsPage() {
   const router = useRouter()
   const { capturedImage } = useImageStore()
+  const [analysis, setAnalysis] = useState(mockAnalysis)
+
+  useEffect(() => {
+    // Carregar análise do localStorage se existir
+    const savedAnalysis = localStorage.getItem('analysisResult')
+    if (savedAnalysis) {
+      try {
+        setAnalysis(JSON.parse(savedAnalysis))
+      } catch (e) {
+        console.error('Erro ao carregar análise:', e)
+      }
+    }
+  }, [])
 
   const getScoreColor = (score: number) => {
     if (score >= 80) return 'text-success'
@@ -29,17 +44,17 @@ export default function ResultsPage() {
   const metrics = [
     {
       label: 'Hidratação',
-      value: mockAnalysis.hydration,
+      value: analysis.hydration,
       color: 'bg-blue-500',
     },
     {
       label: 'Elasticidade',
-      value: mockAnalysis.elasticity,
+      value: analysis.elasticity,
       color: 'bg-purple-500',
     },
     {
       label: 'Textura',
-      value: mockAnalysis.texture,
+      value: analysis.texture,
       color: 'bg-teal-500',
     },
   ]
@@ -47,6 +62,11 @@ export default function ResultsPage() {
   return (
     <div className="min-h-screen bg-background px-3 sm:px-4 py-4 sm:py-6 md:py-8">
       <div className="container mx-auto max-w-6xl">
+        {/* Back Button */}
+        <div className="mb-4">
+          <BackButton href="/analyzing" />
+        </div>
+
         {/* Header */}
         <motion.div
           initial={{ opacity: 0, y: 20 }}
@@ -88,14 +108,14 @@ export default function ResultsPage() {
                     initial={{ scale: 0 }}
                     animate={{ scale: 1 }}
                     transition={{ duration: 0.6, delay: 0.3, type: 'spring' }}
-                    className={`text-4xl sm:text-5xl md:text-6xl lg:text-7xl font-bold ${getScoreColor(mockAnalysis.overallScore)}`}
+                    className={`text-4xl sm:text-5xl md:text-6xl lg:text-7xl font-bold ${getScoreColor(analysis.overallScore)}`}
                   >
-                    {mockAnalysis.overallScore}
+                    {analysis.overallScore}
                   </motion.div>
                   <span className="text-2xl sm:text-3xl text-gray-400">/100</span>
                 </div>
                 <p className="text-sm sm:text-base md:text-lg text-gray-700 px-2">
-                  Sua pele tem aproximadamente <span className="font-semibold">{mockAnalysis.skinAge} anos</span>
+                  Sua pele tem aproximadamente <span className="font-semibold">{analysis.skinAge} anos</span>
                 </p>
               </div>
             </CardContent>

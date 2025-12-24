@@ -6,6 +6,7 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/com
 import { mockRoutine } from '@/lib/mock-data/recommendations'
 import { motion } from 'framer-motion'
 import { Clock, Sparkles } from 'lucide-react'
+import BackButton from '@/components/navigation/BackButton'
 
 export default function RoutinePage() {
   const calculateTotalTime = (steps: typeof mockRoutine.morning) => {
@@ -20,6 +21,11 @@ export default function RoutinePage() {
   return (
     <div className="min-h-screen bg-background px-3 sm:px-4 py-4 sm:py-6 md:py-8">
       <div className="container mx-auto max-w-5xl">
+        {/* Back Button */}
+        <div className="mb-4">
+          <BackButton href="/results" />
+        </div>
+
         {/* Header */}
         <motion.div
           initial={{ opacity: 0, y: 20 }}

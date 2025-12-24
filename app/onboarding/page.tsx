@@ -12,6 +12,7 @@ import Step2 from '@/components/features/onboarding/Step2'
 import Step3 from '@/components/features/onboarding/Step3'
 import Step4 from '@/components/features/onboarding/Step4'
 import Step5 from '@/components/features/onboarding/Step5'
+import BackButton from '@/components/navigation/BackButton'
 
 export default function OnboardingPage() {
   const router = useRouter()
@@ -46,6 +47,11 @@ export default function OnboardingPage() {
   return (
     <div className="min-h-screen bg-background px-3 sm:px-4 py-4 sm:py-6 md:py-8">
       <div className="container mx-auto max-w-4xl">
+        {/* Back Button */}
+        <div className="mb-4">
+          <BackButton href={currentStep === 0 ? '/' : undefined} />
+        </div>
+
         {/* Progress Bar */}
         <div className="mb-4 sm:mb-6 md:mb-8">
           <div className="flex justify-between items-center mb-2">

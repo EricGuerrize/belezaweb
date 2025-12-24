@@ -11,12 +11,19 @@ interface OnboardingStore {
 }
 
 export const useOnboardingStore = create<OnboardingStore>((set) => ({
-  data: defaultOnboardingData,
+  data: typeof window !== 'undefined' 
+    ? JSON.parse(localStorage.getItem('onboardingData') || JSON.stringify(defaultOnboardingData))
+    : defaultOnboardingData,
   currentStep: 0,
   updateData: (newData) =>
-    set((state) => ({
-      data: { ...state.data, ...newData },
-    })),
+    set((state) => {
+      const updatedData = { ...state.data, ...newData }
+      // Salvar no localStorage
+      if (typeof window !== 'undefined') {
+        localStorage.setItem('onboardingData', JSON.stringify(updatedData))
+      }
+      return { data: updatedData }
+    }),
   nextStep: () =>
     set((state) => ({
       currentStep: Math.min(state.currentStep + 1, 4),
@@ -25,10 +32,14 @@ export const useOnboardingStore = create<OnboardingStore>((set) => ({
     set((state) => ({
       currentStep: Math.max(state.currentStep - 1, 0),
     })),
-  reset: () =>
+  reset: () => {
+    if (typeof window !== 'undefined') {
+      localStorage.removeItem('onboardingData')
+    }
     set({
       data: defaultOnboardingData,
       currentStep: 0,
-    }),
+    })
+  },
 }))
 
