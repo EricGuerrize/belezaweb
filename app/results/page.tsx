@@ -11,6 +11,7 @@ import { useImageStore } from '@/store/image-store'
 import { motion } from 'framer-motion'
 import { Target, TrendingUp } from 'lucide-react'
 import BackButton from '@/components/navigation/BackButton'
+import BeforeAfterSlider from '@/components/features/BeforeAfterSlider'
 
 export default function ResultsPage() {
   const router = useRouter()
@@ -122,7 +123,7 @@ export default function ResultsPage() {
           </Card>
         </motion.div>
 
-        {/* Face Image with Overlay */}
+        {/* Before/After Slider - Como está vs Como ficará */}
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
@@ -130,89 +131,21 @@ export default function ResultsPage() {
           className="mb-6 sm:mb-8"
         >
           <Card>
-            <CardContent className="p-3 sm:p-4 md:pt-6">
-              <div className="relative aspect-[3/4] max-w-md mx-auto bg-gray-100 rounded-xl overflow-hidden">
-                {capturedImage ? (
-                  <>
-                    {/* User's captured photo */}
-                    <img
-                      src={capturedImage}
-                      alt="Sua análise facial"
-                      className="w-full h-full object-cover"
-                    />
-                    {/* Analysis overlay */}
-                    <div className="absolute inset-0 opacity-20 pointer-events-none">
-                      <motion.div
-                        className="absolute top-[15%] left-[50%] w-16 h-16 sm:w-20 sm:h-20 bg-blue-500/60 rounded-full blur-xl"
-                        animate={{
-                          scale: [1, 1.1, 1],
-                          opacity: [0.6, 0.8, 0.6],
-                        }}
-                        transition={{
-                          duration: 3,
-                          repeat: Infinity,
-                          ease: 'easeInOut',
-                        }}
-                      />
-                      <motion.div
-                        className="absolute top-[35%] left-[25%] w-12 h-12 sm:w-16 sm:h-16 bg-purple-500/60 rounded-full blur-xl"
-                        animate={{
-                          scale: [1, 1.15, 1],
-                          opacity: [0.5, 0.7, 0.5],
-                        }}
-                        transition={{
-                          duration: 3.5,
-                          repeat: Infinity,
-                          ease: 'easeInOut',
-                          delay: 0.5,
-                        }}
-                      />
-                      <motion.div
-                        className="absolute top-[45%] left-[20%] w-20 h-20 sm:w-24 sm:h-24 bg-blue-500/60 rounded-full blur-xl"
-                        animate={{
-                          scale: [1, 1.2, 1],
-                          opacity: [0.6, 0.9, 0.6],
-                        }}
-                        transition={{
-                          duration: 4,
-                          repeat: Infinity,
-                          ease: 'easeInOut',
-                          delay: 1,
-                        }}
-                      />
-                      <motion.div
-                        className="absolute top-[55%] left-[75%] w-14 h-14 sm:w-18 sm:h-18 bg-purple-500/60 rounded-full blur-xl"
-                        animate={{
-                          scale: [1, 1.1, 1],
-                          opacity: [0.5, 0.8, 0.5],
-                        }}
-                        transition={{
-                          duration: 3.2,
-                          repeat: Infinity,
-                          ease: 'easeInOut',
-                          delay: 1.5,
-                        }}
-                      />
-                    </div>
-                  </>
-                ) : (
-                  /* Placeholder */
-                  <div className="w-full h-full flex items-center justify-center bg-gradient-to-br from-accent to-primary/20 relative">
-                    <div className="absolute inset-0 opacity-30">
-                      <div className="absolute top-[15%] left-[50%] w-20 h-20 bg-blue-500/50 rounded-full blur-xl" />
-                      <div className="absolute top-[35%] left-[25%] w-16 h-16 bg-purple-500/50 rounded-full blur-xl" />
-                      <div className="absolute top-[45%] left-[20%] w-24 h-24 bg-blue-500/50 rounded-full blur-xl" />
-                      <div className="absolute top-[55%] left-[75%] w-18 h-18 bg-purple-500/50 rounded-full blur-xl" />
-                    </div>
-                    <div className="text-center text-gray-500 relative z-10">
-                      <div className="w-12 h-12 sm:w-16 sm:h-16 mx-auto mb-2 rounded-full bg-gray-300 flex items-center justify-center">
-                        <div className="w-8 h-8 sm:w-12 sm:h-12 rounded-full bg-gray-400" />
-                      </div>
-                      <p className="text-xs sm:text-sm">Análise Facial</p>
-                    </div>
-                  </div>
-                )}
-              </div>
+            <CardHeader>
+              <CardTitle className="text-center text-xl sm:text-2xl">
+                Veja como sua pele ficará
+              </CardTitle>
+              <p className="text-center text-sm sm:text-base text-gray-600 mt-2">
+                Arraste a barra para os lados e veja a transformação
+              </p>
+            </CardHeader>
+            <CardContent className="p-4 sm:p-6">
+              <BeforeAfterSlider
+                beforeImage={capturedImage || 'data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMjAwIiBoZWlnaHQ9IjMwMCIgdmlld0JveD0iMCAwIDIwMCAzMDAiIGZpbGw9Im5vbmUiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyI+CjxyZWN0IHdpZHRoPSIyMDAiIGhlaWdodD0iMzAwIiBmaWxsPSIjRjNGNEY2Ii8+CjxlbGxpcHNlIGN4PSIxMDAiIGN5PSIxMDAiIHJ4PSI2MCIgcnk9IjcwIiBmaWxsPSIjRTVDN0VCIi8+CjxwYXRoIGQ9Ik00MCA4MCBRNDAgNDAgNjAgMzAgUTgwIDIwIDEwMCAyNSBRMTIwIDIwIDE0MCAzMCBRMTYwIDQwIDE2MCA4MCBMMTYwIDEwMCBRMTYwIDEyMCAxNDAgMTMwIEw2MCAxMzAgUTQwIDEyMCA0MCAxMDAgWiIgZmlsbD0iIzlDQTNBRiIvPgo8Y2lyY2xlIGN4PSI4MCIgY3k9IjkwIiByPSI4IiBmaWxsPSIjNEI1NTYzIi8+CjxjaXJjbGUgY3g9IjEyMCIgY3k9IjkwIiByPSI4IiBmaWxsPSIjNEI1NTYzIi8+CjxlbGxpcHNlIGN4PSIxMDAiIGN5PSIxMTAiIHJ4PSI0IiByeT0iOCIgZmlsbD0iI0QxRDVEQiIvPgo8cGF0aCBkPSJNOTAgMTI1IFE5MCAxMzUgMTAwIDEzNSBRMTEwIDEzNSAxMTAgMTI1IiBzdHJva2U9IiM5Q0EzQUYiIHN0cm9rZS13aWR0aD0iMiIgZmlsbD0ibm9uZSIgc3Ryb2tlLWxpbmVjYXA9InJvdW5kIi8+Cjwvc3ZnPg=='}
+                afterImage={capturedImage || 'data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMjAwIiBoZWlnaHQ9IjMwMCIgdmlld0JveD0iMCAwIDIwMCAzMDAiIGZpbGw9Im5vbmUiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyI+CjxyZWN0IHdpZHRoPSIyMDAiIGhlaWdodD0iMzAwIiBmaWxsPSIjRkZGRkZGIi8+CjxlbGxpcHNlIGN4PSIxMDAiIGN5PSIxMDAiIHJ4PSI2MCIgcnk9IjcwIiBmaWxsPSIjRkZFRUZGIi8+CjxwYXRoIGQ9Ik00MCA4MCBRNDAgNDAgNjAgMzAgUTgwIDIwIDEwMCAyNSBRMTIwIDIwIDE0MCAzMCBRMTYwIDQwIDE2MCA4MCBMMTYwIDEwMCBRMTYwIDEyMCAxNDAgMTMwIEw2MCAxMzAgUTQwIDEyMCA0MCAxMDAgWiIgZmlsbD0iI0VDNzJOTiIvPgo8Y2lyY2xlIGN4PSI4MCIgY3k9IjkwIiByPSI4IiBmaWxsPSIjRkY2QkI3Ii8+CjxjaXJjbGUgY3g9IjEyMCIgY3k9IjkwIiByPSI4IiBmaWxsPSIjRkY2QkI3Ii8+CjxlbGxpcHNlIGN4PSIxMDAiIGN5PSIxMTAiIHJ4PSI0IiByeT0iOCIgZmlsbD0iI0ZGRUZGRiIvPgo8cGF0aCBkPSJNOTAgMTI1IFE5MCAxMzUgMTAwIDEzNSBRMTEwIDEzNSAxMTAgMTI1IiBzdHJva2U9IiNFRjcyOTkiIHN0cm9rZS13aWR0aD0iMiIgZmlsbD0ibm9uZSIgc3Ryb2tlLWxpbmVjYXA9InJvdW5kIi8+Cjwvc3ZnPg=='
+                beforeLabel="Como está"
+                afterLabel="Como ficará"
+              />
             </CardContent>
           </Card>
         </motion.div>

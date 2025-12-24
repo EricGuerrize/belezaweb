@@ -1,13 +1,10 @@
 'use client'
 
 import { useOnboardingStore } from '@/store/onboarding-store'
-import { useImageStore } from '@/store/image-store'
 import { SkinConcern } from '@/lib/mock-data/onboarding'
 import { Button } from '@/components/ui/button'
 import { motion } from 'framer-motion'
 import { useState } from 'react'
-
-type FacialArea = 'forehead' | 'temples' | 'eyes' | 'cheeks' | 'lips' | 'neck' | 'jawline' | 'chin' | 'décolleté'
 
 interface AreaPosition {
   concern: SkinConcern
@@ -29,7 +26,6 @@ const areas: AreaPosition[] = [
 
 export default function Step2() {
   const { data, updateData } = useOnboardingStore()
-  const { capturedImage } = useImageStore()
   const [hoveredArea, setHoveredArea] = useState<SkinConcern | null>(null)
 
   const toggleConcern = (concern: SkinConcern) => {
@@ -57,95 +53,39 @@ export default function Step2() {
       <div className="relative w-full max-w-xs sm:max-w-sm md:max-w-md mx-auto mb-4 sm:mb-6">
         {/* Face Image Container */}
         <div className="relative aspect-[3/4] bg-gray-100 rounded-xl overflow-hidden shadow-lg max-h-[60vh] sm:max-h-none">
-          {capturedImage ? (
-            <>
-              {/* User's captured photo */}
-              <img
-                src={capturedImage}
-                alt="Sua foto"
-                className="w-full h-full object-cover"
-              />
-
-              {/* Highlight overlays for selected areas */}
-              {areas.map((area) => {
-                const isSelected = data.concerns?.includes(area.concern) || false
-                if (!isSelected) return null
-
-                // Tamanhos diferentes para cada área
-                const areaSizes: Record<FacialArea, { width: string; height: string }> = {
-                  forehead: { width: '80px', height: '60px' },
-                  temples: { width: '60px', height: '60px' },
-                  eyes: { width: '100px', height: '70px' },
-                  cheeks: { width: '90px', height: '90px' },
-                  lips: { width: '50px', height: '40px' },
-                  neck: { width: '70px', height: '80px' },
-                  jawline: { width: '60px', height: '60px' },
-                  chin: { width: '50px', height: '50px' },
-                  'décolleté': { width: '80px', height: '60px' },
-                }
-
-                const size = areaSizes[area.concern as FacialArea] || { width: '60px', height: '60px' }
-
-                return (
-                  <motion.div
-                    key={`highlight-${area.concern}`}
-                    className="absolute pointer-events-none z-20"
-                    style={{
-                      top: area.position.top,
-                      left: area.position.left,
-                      transform: 'translate(-50%, -50%)',
-                    }}
-                    initial={{ scale: 0, opacity: 0 }}
-                    animate={{ scale: 1, opacity: 1 }}
-                    exit={{ scale: 0, opacity: 0 }}
-                  >
-                    <div className="relative">
-                      {/* Pulsing ring */}
-                      <motion.div
-                        className="absolute inset-0 rounded-full bg-primary/40 blur-lg"
-                        style={{
-                          width: size.width,
-                          height: size.height,
-                          marginLeft: `-${parseInt(size.width) / 2}px`,
-                          marginTop: `-${parseInt(size.height) / 2}px`,
-                        }}
-                        animate={{
-                          scale: [1, 1.3, 1],
-                          opacity: [0.5, 0.2, 0.5],
-                        }}
-                        transition={{
-                          duration: 2,
-                          repeat: Infinity,
-                          ease: 'easeInOut',
-                        }}
-                      />
-                      {/* Highlight circle */}
-                      <div
-                        className="rounded-full border-3 border-primary bg-primary/30 backdrop-blur-sm"
-                        style={{
-                          width: size.width,
-                          height: size.height,
-                          marginLeft: `-${parseInt(size.width) / 2}px`,
-                          marginTop: `-${parseInt(size.height) / 2}px`,
-                          boxShadow: '0 0 20px rgba(236, 72, 153, 0.5)',
-                        }}
-                      />
-                    </div>
-                  </motion.div>
-                )
-              })}
-            </>
-          ) : (
-            /* Placeholder for face image */
-            <div className="w-full h-full flex items-center justify-center bg-gradient-to-br from-accent to-primary/20">
-              <div className="text-center text-gray-500">
-                <div className="w-20 h-20 sm:w-24 sm:h-24 md:w-32 md:h-32 mx-auto mb-2 rounded-full bg-gray-300 flex items-center justify-center">
-                  <div className="w-12 h-12 sm:w-16 sm:h-16 md:w-20 md:h-20 rounded-full bg-gray-400" />
-                </div>
-                <p className="text-xs sm:text-sm">Imagem do Rosto</p>
-              </div>
+          {/* Imagem genérica de pessoa */}
+          <div className="w-full h-full flex items-center justify-center bg-gradient-to-br from-accent to-primary/20">
+            <div className="w-full h-full flex items-center justify-center">
+              {/* Placeholder de rosto genérico */}
+              <svg
+                className="w-full h-full"
+                viewBox="0 0 200 300"
+                fill="none"
+                xmlns="http://www.w3.org/2000/svg"
+              >
+                {/* Cabeça */}
+                <ellipse cx="100" cy="100" rx="60" ry="70" fill="#E5E7EB" />
+                {/* Cabelo */}
+                <path
+                  d="M40 80 Q40 40 60 30 Q80 20 100 25 Q120 20 140 30 Q160 40 160 80 L160 100 Q160 120 140 130 L60 130 Q40 120 40 100 Z"
+                  fill="#9CA3AF"
+                />
+                {/* Olhos */}
+                <circle cx="80" cy="90" r="8" fill="#4B5563" />
+                <circle cx="120" cy="90" r="8" fill="#4B5563" />
+                {/* Nariz */}
+                <ellipse cx="100" cy="110" rx="4" ry="8" fill="#D1D5DB" />
+                {/* Boca */}
+                <path
+                  d="M90 125 Q100 135 110 125"
+                  stroke="#9CA3AF"
+                  strokeWidth="2"
+                  fill="none"
+                  strokeLinecap="round"
+                />
+              </svg>
             </div>
-          )}
+          </div>
 
           {/* Interactive Checkboxes */}
           {areas.map((area) => {

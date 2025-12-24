@@ -32,9 +32,9 @@ export default function BeforeAfterSlider({
     if (!isDragging || !containerRef.current) return
 
     const rect = containerRef.current.getBoundingClientRect()
-    const clientY = 'touches' in e ? e.touches[0].clientY : e.clientY
-    const y = clientY - rect.top
-    const percentage = Math.max(0, Math.min(100, (y / rect.height) * 100))
+    const clientX = 'touches' in e ? e.touches[0].clientX : e.clientX
+    const x = clientX - rect.left
+    const percentage = Math.max(0, Math.min(100, (x / rect.width) * 100))
     setSliderPosition(percentage)
   }
 
@@ -58,24 +58,12 @@ export default function BeforeAfterSlider({
     <div className="relative w-full aspect-[3/4] rounded-xl overflow-hidden shadow-2xl bg-gray-100">
       <div
         ref={containerRef}
-        className="relative w-full h-full cursor-row-resize select-none"
+        className="relative w-full h-full cursor-col-resize select-none"
         onMouseDown={handleMouseDown}
         onTouchStart={handleMouseDown}
       >
-        {/* After Image (Bottom) */}
+        {/* Before Image (Left) - Como está */}
         <div className="absolute inset-0">
-          <img
-            src={afterImage}
-            alt={afterLabel}
-            className="w-full h-full object-cover"
-          />
-        </div>
-
-        {/* Before Image (Top) - Clipped */}
-        <div
-          className="absolute inset-0 overflow-hidden"
-          style={{ clipPath: `inset(0 0 ${100 - sliderPosition}% 0)` }}
-        >
           <img
             src={beforeImage}
             alt={beforeLabel}
@@ -83,10 +71,22 @@ export default function BeforeAfterSlider({
           />
         </div>
 
-        {/* Slider Line */}
+        {/* After Image (Right) - Como ficará - Clipped */}
         <div
-          className="absolute left-0 right-0 h-1 bg-white shadow-lg z-10"
-          style={{ top: `${sliderPosition}%`, transform: 'translateY(-50%)' }}
+          className="absolute inset-0 overflow-hidden"
+          style={{ clipPath: `inset(0 0 0 ${sliderPosition}%)` }}
+        >
+          <img
+            src={afterImage}
+            alt={afterLabel}
+            className="w-full h-full object-cover"
+          />
+        </div>
+
+        {/* Slider Line Vertical */}
+        <div
+          className="absolute top-0 bottom-0 w-1 bg-white shadow-lg z-10"
+          style={{ left: `${sliderPosition}%`, transform: 'translateX(-50%)' }}
         >
           {/* Slider Handle */}
           <div
@@ -96,7 +96,7 @@ export default function BeforeAfterSlider({
             <div className="w-6 h-6 sm:w-8 sm:h-8 bg-primary rounded-full flex items-center justify-center">
               <div className="flex flex-row gap-0.5">
                 <svg
-                  className="w-3 h-3 sm:w-4 sm:h-4 text-white rotate-90"
+                  className="w-3 h-3 sm:w-4 sm:h-4 text-white"
                   fill="currentColor"
                   viewBox="0 0 20 20"
                 >
@@ -117,7 +117,7 @@ export default function BeforeAfterSlider({
 
         {/* Instructions */}
         <div className="absolute bottom-4 left-1/2 transform -translate-x-1/2 bg-black/60 text-white px-4 py-2 rounded-lg text-xs sm:text-sm backdrop-blur-sm text-center">
-          <span className="hidden sm:inline">Arraste a barra para comparar</span>
+          <span className="hidden sm:inline">Arraste a barra para os lados e veja como ficará</span>
           <span className="sm:hidden">Arraste para comparar</span>
         </div>
       </div>
