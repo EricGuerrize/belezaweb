@@ -32,9 +32,9 @@ export default function BeforeAfterSlider({
     if (!isDragging || !containerRef.current) return
 
     const rect = containerRef.current.getBoundingClientRect()
-    const clientX = 'touches' in e ? e.touches[0].clientX : e.clientX
-    const x = clientX - rect.left
-    const percentage = Math.max(0, Math.min(100, (x / rect.width) * 100))
+    const clientY = 'touches' in e ? e.touches[0].clientY : e.clientY
+    const y = clientY - rect.top
+    const percentage = Math.max(0, Math.min(100, (y / rect.height) * 100))
     setSliderPosition(percentage)
   }
 
@@ -58,11 +58,11 @@ export default function BeforeAfterSlider({
     <div className="relative w-full aspect-[3/4] rounded-xl overflow-hidden shadow-2xl bg-gray-100">
       <div
         ref={containerRef}
-        className="relative w-full h-full cursor-col-resize select-none"
+        className="relative w-full h-full cursor-row-resize select-none"
         onMouseDown={handleMouseDown}
         onTouchStart={handleMouseDown}
       >
-        {/* After Image (Right Side) */}
+        {/* After Image (Bottom) */}
         <div className="absolute inset-0">
           <img
             src={afterImage}
@@ -71,10 +71,10 @@ export default function BeforeAfterSlider({
           />
         </div>
 
-        {/* Before Image (Left Side) - Clipped */}
+        {/* Before Image (Top) - Clipped */}
         <div
           className="absolute inset-0 overflow-hidden"
-          style={{ clipPath: `inset(0 ${100 - sliderPosition}% 0 0)` }}
+          style={{ clipPath: `inset(0 0 ${100 - sliderPosition}% 0)` }}
         >
           <img
             src={beforeImage}
@@ -85,8 +85,8 @@ export default function BeforeAfterSlider({
 
         {/* Slider Line */}
         <div
-          className="absolute top-0 bottom-0 w-1 bg-white shadow-lg z-10"
-          style={{ left: `${sliderPosition}%`, transform: 'translateX(-50%)' }}
+          className="absolute left-0 right-0 h-1 bg-white shadow-lg z-10"
+          style={{ top: `${sliderPosition}%`, transform: 'translateY(-50%)' }}
         >
           {/* Slider Handle */}
           <div
@@ -94,9 +94,9 @@ export default function BeforeAfterSlider({
             style={{ touchAction: 'none' }}
           >
             <div className="w-6 h-6 sm:w-8 sm:h-8 bg-primary rounded-full flex items-center justify-center">
-              <div className="flex flex-col gap-0.5">
+              <div className="flex flex-row gap-0.5">
                 <svg
-                  className="w-3 h-3 sm:w-4 sm:h-4 text-white"
+                  className="w-3 h-3 sm:w-4 sm:h-4 text-white rotate-90"
                   fill="currentColor"
                   viewBox="0 0 20 20"
                 >
