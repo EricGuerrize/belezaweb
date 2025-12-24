@@ -5,12 +5,12 @@ import { Button } from '@/components/ui/button'
 import { motion } from 'framer-motion'
 
 const goals = [
-  { value: 'anti_aging', label: 'Anti-aging', icon: '✨' },
-  { value: 'hydration', label: 'Hidratação', icon: '💧' },
-  { value: 'acne', label: 'Controle de acne', icon: '🎯' },
-  { value: 'brightening', label: 'Clareamento', icon: '🌟' },
-  { value: 'even_tone', label: 'Uniformizar tom', icon: '🌈' },
-  { value: 'glow', label: 'Make my face glow', icon: '✨' },
+  { value: 'anti_aging', label: 'Anti-aging', color: 'bg-purple-500' },
+  { value: 'hydration', label: 'Hidratação', color: 'bg-blue-500' },
+  { value: 'acne', label: 'Controle de acne', color: 'bg-red-500' },
+  { value: 'brightening', label: 'Clareamento', color: 'bg-yellow-500' },
+  { value: 'even_tone', label: 'Uniformizar tom', color: 'bg-pink-500' },
+  { value: 'glow', label: 'Fazer minha face brilhar', color: 'bg-orange-500' },
 ]
 
 export default function Step4() {
@@ -38,7 +38,7 @@ export default function Step4() {
                 className="w-full h-auto py-6 flex flex-col gap-2"
                 onClick={() => updateData({ mainGoal: goal.value })}
               >
-                <span className="text-3xl">{goal.icon}</span>
+                <div className={`w-8 h-8 rounded-full ${goal.color} mx-auto`} />
                 <span>{goal.label}</span>
               </Button>
             </motion.div>

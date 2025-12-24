@@ -55,10 +55,12 @@ export default function Step2() {
         <div className="relative aspect-[3/4] bg-gray-100 rounded-xl overflow-hidden">
           {/* Placeholder for face image - in production, use actual image */}
           <div className="w-full h-full flex items-center justify-center bg-gradient-to-br from-accent to-primary/20">
-            <div className="text-center text-gray-500">
-              <div className="text-4xl md:text-6xl mb-2">👤</div>
-              <p className="text-xs md:text-sm">Face Image</p>
-            </div>
+                  <div className="text-center text-gray-500">
+                    <div className="w-16 h-16 md:w-24 md:h-24 mx-auto mb-2 rounded-full bg-gray-300 flex items-center justify-center">
+                      <div className="w-12 h-12 md:w-16 md:h-16 rounded-full bg-gray-400" />
+                    </div>
+                    <p className="text-xs md:text-sm">Imagem do Rosto</p>
+                  </div>
           </div>
 
           {/* Interactive Checkboxes */}

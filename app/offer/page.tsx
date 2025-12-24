@@ -135,8 +135,10 @@ export default function OfferPage() {
                 <div className="relative aspect-[9/16] bg-white rounded-lg overflow-hidden shadow-lg mb-4">
                   <div className="w-full h-full flex items-center justify-center bg-gradient-to-br from-accent to-primary/10">
                     <div className="text-center text-gray-500">
-                      <div className="text-4xl mb-2">📱</div>
-                      <p className="text-xs">Routine Preview</p>
+                      <div className="w-12 h-12 mx-auto mb-2 rounded-lg bg-primary/20 flex items-center justify-center">
+                        <div className="w-8 h-8 rounded bg-primary/40" />
+                      </div>
+                      <p className="text-xs">Preview da Rotina</p>
                     </div>
                   </div>
                 </div>

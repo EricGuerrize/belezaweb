@@ -4,6 +4,7 @@ import Link from 'next/link'
 import { Button } from '@/components/ui/button'
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
 import { motion } from 'framer-motion'
+import { Camera } from 'lucide-react'
 
 export default function Home() {
   return (
@@ -94,9 +95,9 @@ export default function Home() {
                 <Card className="h-full">
                   <CardHeader>
                     <div className="w-12 h-12 rounded-full bg-primary/20 flex items-center justify-center mb-4">
-                      {feature.icon === 'camera' && <span className="text-2xl">📷</span>}
-                      {feature.icon === 'brain' && <span className="text-2xl">🧠</span>}
-                      {feature.icon === 'sparkles' && <span className="text-2xl">✨</span>}
+                      {feature.icon === 'camera' && <Camera className="w-6 h-6 text-primary" />}
+                      {feature.icon === 'brain' && <div className="w-6 h-6 rounded-full bg-primary" />}
+                      {feature.icon === 'sparkles' && <div className="w-6 h-6 rounded-full bg-primary/60" />}
                     </div>
                     <CardTitle>{feature.title}</CardTitle>
                   </CardHeader>
