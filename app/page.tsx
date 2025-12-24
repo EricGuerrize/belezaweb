@@ -19,7 +19,7 @@ export default function Home() {
             className="text-center"
           >
             <h1 className="font-heading text-3xl sm:text-4xl md:text-5xl lg:text-7xl font-bold text-text mb-4 sm:mb-6">
-              MaxBeauty
+              Beleza Viva
             </h1>
             <p className="text-xl sm:text-2xl md:text-3xl text-gray-700 mb-3 sm:mb-4 font-heading px-2">
               Obtenha a versão mais radiante da sua pele
@@ -140,9 +140,9 @@ export default function Home() {
       {/* Footer */}
       <footer className="px-4 py-12 bg-secondary text-white">
         <div className="container mx-auto max-w-6xl text-center">
-          <p className="text-lg font-heading mb-2">MaxBeauty</p>
+          <p className="text-lg font-heading mb-2">Beleza Viva</p>
           <p className="text-sm opacity-80">
-            © 2024 MaxBeauty. Todos os direitos reservados.
+            © 2024 Beleza Viva. Todos os direitos reservados.
           </p>
         </div>
       </footer>

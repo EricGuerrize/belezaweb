@@ -25,7 +25,7 @@ export default function OfferPage() {
           className="mb-8 text-center"
         >
           <h1 className="text-4xl md:text-5xl font-heading font-bold mb-4">
-            Plano MaxBeauty com 100% de adequação
+            Plano Beleza Viva com 100% de adequação
           </h1>
           <p className="text-lg text-gray-600 max-w-2xl mx-auto">
             Vamos conseguir a pele dos sonhos. Mostraremos como construir uma rotina eficaz, ajudaremos a escolher os produtos certos e te acompanharemos nesta jornada.
@@ -128,7 +128,7 @@ export default function OfferPage() {
                   <span className="font-semibold">Best approach</span>
                 </div>
                 <div className="text-2xl font-heading text-primary mb-4">
-                  MaxBeauty Plan
+                  Plano Beleza Viva
                 </div>
               </CardHeader>
               <CardContent>

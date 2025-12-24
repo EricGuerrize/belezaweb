@@ -2,7 +2,7 @@ import type { Metadata } from "next"
 import "./globals.css"
 
 export const metadata: Metadata = {
-  title: "MaxBeauty - Análise de Pele com IA",
+  title: "Beleza Viva - Análise de Pele com IA",
   description: "Descubra a idade real da sua pele e receba recomendações personalizadas de skincare",
 }
 

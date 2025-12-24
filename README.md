@@ -1,4 +1,4 @@
-# MaxBeauty - App de Análise de Pele com IA
+# Beleza Viva - App de Análise de Pele com IA
 
 Aplicativo web de análise de pele com inteligência artificial, desenvolvido com foco mobile-first e interface em português brasileiro.
 
@@ -59,7 +59,7 @@ Acesse [http://localhost:3000](http://localhost:3000) no navegador.
 
 ```bash
 # Criar repositório no GitHub primeiro, depois:
-git remote add origin https://github.com/SEU_USUARIO/maxbeauty.git
+git remote add origin https://github.com/SEU_USUARIO/beleza-viva.git
 git branch -M main
 git push -u origin main
 ```
@@ -69,7 +69,7 @@ git push -u origin main
 1. Acesse [vercel.com](https://vercel.com)
 2. Faça login com sua conta GitHub
 3. Clique em "Add New Project"
-4. Selecione o repositório `maxbeauty`
+4. Selecione o repositório `beleza-viva`
 5. Configure:
    - **Framework Preset**: Next.js
    - **Root Directory**: ./
