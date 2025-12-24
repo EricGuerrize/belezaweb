@@ -53,9 +53,9 @@ export default function Step2() {
         Toque nas áreas do rosto que deseja melhorar
       </p>
 
-      <div className="relative w-full max-w-sm sm:max-w-md mx-auto mb-4 sm:mb-6">
+      <div className="relative w-full max-w-xs sm:max-w-sm md:max-w-md mx-auto mb-4 sm:mb-6">
         {/* Face Image Container */}
-        <div className="relative aspect-[3/4] bg-gray-100 rounded-xl overflow-hidden shadow-lg">
+        <div className="relative aspect-[3/4] bg-gray-100 rounded-xl overflow-hidden shadow-lg max-h-[60vh] sm:max-h-none">
           {capturedImage ? (
             <>
               {/* User's captured photo */}
