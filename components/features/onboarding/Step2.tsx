@@ -7,6 +7,8 @@ import { Button } from '@/components/ui/button'
 import { motion } from 'framer-motion'
 import { useState } from 'react'
 
+type FacialArea = 'forehead' | 'temples' | 'eyes' | 'cheeks' | 'lips' | 'neck' | 'jawline' | 'chin' | 'décolleté'
+
 interface AreaPosition {
   concern: SkinConcern
   label: string
@@ -70,7 +72,7 @@ export default function Step2() {
                 if (!isSelected) return null
 
                 // Tamanhos diferentes para cada área
-                const areaSizes: Record<SkinConcern, { width: string; height: string }> = {
+                const areaSizes: Record<FacialArea, { width: string; height: string }> = {
                   forehead: { width: '80px', height: '60px' },
                   temples: { width: '60px', height: '60px' },
                   eyes: { width: '100px', height: '70px' },
@@ -82,7 +84,7 @@ export default function Step2() {
                   'décolleté': { width: '80px', height: '60px' },
                 }
 
-                const size = areaSizes[area.concern] || { width: '60px', height: '60px' }
+                const size = areaSizes[area.concern as FacialArea] || { width: '60px', height: '60px' }
 
                 return (
                   <motion.div
