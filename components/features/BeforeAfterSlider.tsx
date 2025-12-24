@@ -52,6 +52,7 @@ export default function BeforeAfterSlider({
       window.removeEventListener('touchmove', handleMouseMove as any)
       window.removeEventListener('touchend', handleMouseUp)
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [isDragging])
 
   return (
@@ -64,6 +65,7 @@ export default function BeforeAfterSlider({
       >
         {/* Before Image (Left) - Como está */}
         <div className="absolute inset-0">
+          {/* eslint-disable-next-line @next/next/no-img-element */}
           <img
             src={beforeImage}
             alt={beforeLabel}
@@ -76,6 +78,7 @@ export default function BeforeAfterSlider({
           className="absolute inset-0 overflow-hidden"
           style={{ clipPath: `inset(0 0 0 ${sliderPosition}%)` }}
         >
+          {/* eslint-disable-next-line @next/next/no-img-element */}
           <img
             src={afterImage}
             alt={afterLabel}

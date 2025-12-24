@@ -155,6 +155,7 @@ export default function CapturePage() {
               ) : (
                 <div className="space-y-4">
                   <div className="relative rounded-xl overflow-hidden bg-gray-100">
+                    {/* eslint-disable-next-line @next/next/no-img-element */}
                     <img
                       src={image}
                       alt="Preview"
