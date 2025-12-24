@@ -53,9 +53,9 @@ export default function Step2() {
         Toque nas áreas do rosto que deseja melhorar
       </p>
 
-      <div className="relative w-full max-w-md mx-auto mb-4 sm:mb-6">
+      <div className="relative w-full max-w-sm sm:max-w-md mx-auto mb-4 sm:mb-6">
         {/* Face Image Container */}
-        <div className="relative aspect-[3/4] bg-gray-100 rounded-xl overflow-hidden">
+        <div className="relative aspect-[3/4] bg-gray-100 rounded-xl overflow-hidden shadow-lg">
           {capturedImage ? (
             <>
               {/* User's captured photo */}
@@ -70,10 +70,25 @@ export default function Step2() {
                 const isSelected = data.concerns?.includes(area.concern) || false
                 if (!isSelected) return null
 
+                // Tamanhos diferentes para cada área
+                const areaSizes: Record<SkinConcern, { width: string; height: string }> = {
+                  forehead: { width: '80px', height: '60px' },
+                  temples: { width: '60px', height: '60px' },
+                  eyes: { width: '100px', height: '70px' },
+                  cheeks: { width: '90px', height: '90px' },
+                  lips: { width: '50px', height: '40px' },
+                  neck: { width: '70px', height: '80px' },
+                  jawline: { width: '60px', height: '60px' },
+                  chin: { width: '50px', height: '50px' },
+                  'décolleté': { width: '80px', height: '60px' },
+                }
+
+                const size = areaSizes[area.concern] || { width: '60px', height: '60px' }
+
                 return (
                   <motion.div
                     key={`highlight-${area.concern}`}
-                    className="absolute pointer-events-none"
+                    className="absolute pointer-events-none z-20"
                     style={{
                       top: area.position.top,
                       left: area.position.left,
@@ -86,11 +101,16 @@ export default function Step2() {
                     <div className="relative">
                       {/* Pulsing ring */}
                       <motion.div
-                        className="absolute inset-0 rounded-full bg-primary/30 blur-md"
-                        style={{ width: '60px', height: '60px', marginLeft: '-30px', marginTop: '-30px' }}
+                        className="absolute inset-0 rounded-full bg-primary/40 blur-lg"
+                        style={{
+                          width: size.width,
+                          height: size.height,
+                          marginLeft: `-${parseInt(size.width) / 2}px`,
+                          marginTop: `-${parseInt(size.height) / 2}px`,
+                        }}
                         animate={{
-                          scale: [1, 1.2, 1],
-                          opacity: [0.6, 0.3, 0.6],
+                          scale: [1, 1.3, 1],
+                          opacity: [0.5, 0.2, 0.5],
                         }}
                         transition={{
                           duration: 2,
@@ -98,10 +118,16 @@ export default function Step2() {
                           ease: 'easeInOut',
                         }}
                       />
-                      {/* Static circle */}
+                      {/* Highlight circle */}
                       <div
-                        className="rounded-full border-2 border-primary bg-primary/20"
-                        style={{ width: '50px', height: '50px', marginLeft: '-25px', marginTop: '-25px' }}
+                        className="rounded-full border-3 border-primary bg-primary/30 backdrop-blur-sm"
+                        style={{
+                          width: size.width,
+                          height: size.height,
+                          marginLeft: `-${parseInt(size.width) / 2}px`,
+                          marginTop: `-${parseInt(size.height) / 2}px`,
+                          boxShadow: '0 0 20px rgba(236, 72, 153, 0.5)',
+                        }}
                       />
                     </div>
                   </motion.div>

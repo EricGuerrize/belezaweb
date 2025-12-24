@@ -27,7 +27,7 @@ export default function Home() {
             <p className="text-base sm:text-lg md:text-xl text-gray-600 mb-6 sm:mb-8 max-w-2xl mx-auto px-4">
               Descubra a idade real da sua pele e receba recomendações personalizadas de skincare com inteligência artificial
             </p>
-            <Link href="/onboarding">
+            <Link href="/capture">
               <Button size="lg" className="text-base sm:text-lg px-6 sm:px-8 py-4 sm:py-6 w-full sm:w-auto">
                 Analisar minha pele grátis
               </Button>

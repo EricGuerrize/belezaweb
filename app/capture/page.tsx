@@ -1,21 +1,20 @@
 'use client'
 
-import { useState, useRef, useEffect } from 'react'
+import { useState, useRef } from 'react'
 import { useRouter } from 'next/navigation'
 import { Button } from '@/components/ui/button'
 import { Card, CardContent } from '@/components/ui/card'
 import { motion } from 'framer-motion'
-import { Upload, Camera, Shield } from 'lucide-react'
+import { Upload, Camera, X } from 'lucide-react'
 import { useImageStore } from '@/store/image-store'
 import BackButton from '@/components/navigation/BackButton'
 
-export default function AnalyzePage() {
+export default function CapturePage() {
   const router = useRouter()
-  const { capturedImage, setCapturedImage } = useImageStore()
-  const [image, setImage] = useState<string | null>(capturedImage)
+  const { setCapturedImage } = useImageStore()
+  const [image, setImage] = useState<string | null>(null)
   const [isDragging, setIsDragging] = useState(false)
   const [error, setError] = useState<string | null>(null)
-  const [isUploading, setIsUploading] = useState(false)
   const fileInputRef = useRef<HTMLInputElement>(null)
   const cameraInputRef = useRef<HTMLInputElement>(null)
 
@@ -56,68 +55,20 @@ export default function AnalyzePage() {
   const handleFileInput = (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0]
     if (file) handleFileSelect(file)
-    // Reset input para permitir selecionar o mesmo arquivo novamente
     e.target.value = ''
   }
 
   const handleCameraInput = (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0]
     if (file) handleFileSelect(file)
-    // Reset input
     e.target.value = ''
   }
 
-  const handleAnalyze = async () => {
-    if (!image) {
-      setError('Por favor, selecione ou tire uma foto primeiro.')
-      return
-    }
-
-    setIsUploading(true)
-    setError(null)
-
-    try {
-      // Converter base64 para blob
-      const base64Data = image.includes(',') ? image.split(',')[1] : image
-      const byteCharacters = atob(base64Data)
-      const byteNumbers = new Array(byteCharacters.length)
-      for (let i = 0; i < byteCharacters.length; i++) {
-        byteNumbers[i] = byteCharacters.charCodeAt(i)
-      }
-      const byteArray = new Uint8Array(byteNumbers)
-      const blob = new Blob([byteArray], { type: 'image/jpeg' })
-      
-      const formData = new FormData()
-      formData.append('image', blob, 'photo.jpg')
-      
-      // Obter dados do onboarding
-      const onboardingData = localStorage.getItem('onboardingData')
-      if (onboardingData) {
-        formData.append('onboardingData', onboardingData)
-      }
-      
-      // Enviar para API
-      const apiResponse = await fetch('/api/analyze', {
-        method: 'POST',
-        body: formData,
-      })
-
-      if (!apiResponse.ok) {
-        const errorData = await apiResponse.json().catch(() => ({}))
-        throw new Error(errorData.error || 'Erro ao processar análise')
-      }
-
-      const result = await apiResponse.json()
-      
-      // Salvar resultado no localStorage
-      localStorage.setItem('analysisResult', JSON.stringify(result.analysis))
-
-      // Redirecionar para página de análise
-      router.push('/analyzing')
-    } catch (err: any) {
-      console.error('Erro ao analisar:', err)
-      setError(err.message || 'Erro ao processar a análise. Tente novamente.')
-      setIsUploading(false)
+  const handleContinue = () => {
+    if (image) {
+      router.push('/onboarding')
+    } else {
+      setError('Por favor, tire uma foto ou faça upload de uma imagem primeiro.')
     }
   }
 
@@ -126,15 +77,8 @@ export default function AnalyzePage() {
       <div className="container mx-auto max-w-4xl">
         {/* Back Button */}
         <div className="mb-4">
-          <BackButton href="/onboarding" />
+          <BackButton href="/" />
         </div>
-        
-        {/* Info se já tem foto */}
-        {capturedImage && (
-          <div className="mb-4 p-3 bg-primary/10 border border-primary/20 rounded-lg text-sm text-center">
-            <p>Você já tem uma foto. Pode fazer upload de uma nova ou continuar com a atual.</p>
-          </div>
-        )}
 
         <motion.div
           initial={{ opacity: 0, y: 20 }}
@@ -142,10 +86,10 @@ export default function AnalyzePage() {
           transition={{ duration: 0.6 }}
         >
           <h1 className="text-2xl sm:text-3xl md:text-4xl lg:text-5xl font-heading font-bold text-center mb-3 sm:mb-4 px-2">
-            Vamos analisar sua pele!
+            Tire uma foto do seu rosto
           </h1>
           <p className="text-center text-sm sm:text-base text-gray-600 mb-6 sm:mb-8 px-4">
-            Faça upload de uma foto ou tire uma selfie para começar a análise
+            Precisamos de uma foto para personalizar sua análise
           </p>
 
           <Card className="mb-4 sm:mb-6">
@@ -210,31 +154,45 @@ export default function AnalyzePage() {
                 </div>
               ) : (
                 <div className="space-y-4">
-                  <div className="relative rounded-xl overflow-hidden">
+                  <div className="relative rounded-xl overflow-hidden bg-gray-100">
                     <img
                       src={image}
                       alt="Preview"
-                      className="w-full h-auto max-h-96 object-contain mx-auto"
+                      className="w-full h-auto max-h-[60vh] object-contain mx-auto"
                     />
+                    <button
+                      onClick={() => {
+                        setImage(null)
+                        setCapturedImage(null)
+                      }}
+                      className="absolute top-3 right-3 w-10 h-10 rounded-full bg-black/60 hover:bg-black/80 flex items-center justify-center text-white transition-colors"
+                      aria-label="Remover foto"
+                    >
+                      <X className="w-5 h-5" />
+                    </button>
                   </div>
                   <div className="flex flex-col sm:flex-row gap-3 sm:gap-4">
                     <Button
                       variant="outline"
                       onClick={() => {
                         setImage(null)
+                        setCapturedImage(null)
                         fileInputRef.current?.click()
                       }}
                       className="w-full sm:w-auto"
                     >
                       Trocar foto
                     </Button>
-                    <Button 
-                      onClick={handleAnalyze} 
-                      size="lg" 
+                    <Button
+                      variant="outline"
+                      onClick={() => {
+                        setImage(null)
+                        setCapturedImage(null)
+                        cameraInputRef.current?.click()
+                      }}
                       className="w-full sm:w-auto"
-                      disabled={isUploading}
                     >
-                      {isUploading ? 'Processando...' : 'Analisar minha pele'}
+                      Tirar outra foto
                     </Button>
                   </div>
                 </div>
@@ -248,18 +206,15 @@ export default function AnalyzePage() {
             </div>
           )}
 
-          <div className="flex items-center justify-center gap-2 text-xs sm:text-sm text-gray-600 px-4">
-            <Shield className="w-3 h-3 sm:w-4 sm:h-4 text-green-600 flex-shrink-0" />
-            <span className="text-center">Sua foto não será visível para ninguém</span>
-          </div>
-
-          <div className="text-center mt-4 sm:mt-6">
-            <button
-              onClick={() => router.push('/results')}
-              className="text-sm sm:text-base text-primary hover:underline"
+          <div className="flex justify-center">
+            <Button
+              onClick={handleContinue}
+              size="lg"
+              disabled={!image}
+              className="w-full sm:w-auto min-w-[200px]"
             >
-              Pular por enquanto
-            </button>
+              Continuar
+            </Button>
           </div>
         </motion.div>
       </div>

@@ -32,7 +32,9 @@ export default function OnboardingPage() {
     if (currentStep < steps.length - 1) {
       nextStep()
     } else {
-      router.push('/analyze')
+      // Se já tem foto, vai direto para análise
+      // Se não tem, volta para captura
+      router.push('/analyzing')
     }
   }
 

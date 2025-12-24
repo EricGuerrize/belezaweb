@@ -8,8 +8,16 @@ import { motion } from 'framer-motion'
 import { TrendingUp } from 'lucide-react'
 import Link from 'next/link'
 import BackButton from '@/components/navigation/BackButton'
+import BeforeAfterSlider from '@/components/features/BeforeAfterSlider'
+import { useImageStore } from '@/store/image-store'
 
 export default function ComparePage() {
+  const { capturedImage } = useImageStore()
+  
+  // Usar foto do usuário ou placeholder
+  const beforeImage = capturedImage || '/placeholder-before.jpg'
+  const afterImage = capturedImage || '/placeholder-after.jpg' // Em produção, seria a foto após tratamento
+
   const metrics = [
     { label: 'Hidratação', before: mockAnalysis.hydration, after: mockAnalysisAfter.hydration, color: 'bg-blue-500' },
     { label: 'Elasticidade', before: mockAnalysis.elasticity, after: mockAnalysisAfter.elasticity, color: 'bg-purple-500' },
