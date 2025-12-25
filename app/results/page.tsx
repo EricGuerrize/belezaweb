@@ -8,15 +8,23 @@ import { Progress } from '@/components/ui/progress'
 import { mockAnalysis } from '@/lib/mock-data/skin-analysis'
 import { useEffect, useState } from 'react'
 import { useImageStore } from '@/store/image-store'
+import { useResetApp } from '@/lib/reset-app'
 import { motion } from 'framer-motion'
-import { Target, TrendingUp } from 'lucide-react'
+import { Target, TrendingUp, RefreshCw } from 'lucide-react'
 import BackButton from '@/components/navigation/BackButton'
 import BeforeAfterSlider from '@/components/features/BeforeAfterSlider'
 
 export default function ResultsPage() {
   const router = useRouter()
   const { capturedImage } = useImageStore()
+  const { resetWithConfirmation } = useResetApp()
   const [analysis, setAnalysis] = useState(mockAnalysis)
+
+  const handleNewAnalysis = () => {
+    if (resetWithConfirmation('Deseja iniciar uma nova análise? Seus resultados atuais serão perdidos.')) {
+      router.push('/')
+    }
+  }
 
   useEffect(() => {
     // Carregar análise do localStorage se existir
@@ -227,6 +235,15 @@ export default function ResultsPage() {
               Comparar resultados
             </Button>
           </Link>
+          <Button
+            onClick={handleNewAnalysis}
+            variant="ghost"
+            size="lg"
+            className="w-full text-base sm:text-lg text-gray-600 hover:text-primary"
+          >
+            <RefreshCw className="w-4 h-4 mr-2" />
+            Fazer nova análise
+          </Button>
         </motion.div>
       </div>
     </div>

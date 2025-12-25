@@ -1,12 +1,28 @@
 'use client'
 
+import { useEffect } from 'react'
 import Link from 'next/link'
 import { Button } from '@/components/ui/button'
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
 import { motion } from 'framer-motion'
 import { Camera } from 'lucide-react'
+import { resetApp } from '@/lib/reset-app'
 
 export default function Home() {
+  // Limpar cache quando voltar para home
+  useEffect(() => {
+    // Detecta se o usuário está voltando (navegação, não primeira visita)
+    const hasVisited = sessionStorage.getItem('hasVisited')
+
+    if (hasVisited === 'true') {
+      // Limpa dados da sessão anterior
+      resetApp()
+    }
+
+    // Marca que o usuário visitou
+    sessionStorage.setItem('hasVisited', 'true')
+  }, [])
+
   return (
     <div className="min-h-screen bg-background">
       {/* Hero Section */}
