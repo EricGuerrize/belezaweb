@@ -11,7 +11,9 @@ import BackButton from '@/components/navigation/BackButton'
 import BeforeAfterSlider from '@/components/features/BeforeAfterSlider'
 import { useImageStore } from '@/store/image-store'
 
+import { useRefreshRedirect } from '@/hooks/useRefreshRedirect'
 export default function ComparePage() {
+  useRefreshRedirect() // Redireciona para home ao atualizar página
   const { capturedImage } = useImageStore()
   
   // Usar foto do usuário ou placeholder

@@ -6,6 +6,7 @@ import { motion } from 'framer-motion'
 import { Card, CardContent } from '@/components/ui/card'
 import { Progress } from '@/components/ui/progress'
 import { Button } from '@/components/ui/button'
+import { useRefreshRedirect } from '@/hooks/useRefreshRedirect'
 import BackButton from '@/components/navigation/BackButton'
 
 const analyzingSteps = [
@@ -18,6 +19,7 @@ const analyzingSteps = [
 ]
 
 export default function AnalyzingPage() {
+  useRefreshRedirect() // Redireciona para home ao atualizar página
   const router = useRouter()
   const [currentStep, setCurrentStep] = useState(0)
   const [progress, setProgress] = useState(0)

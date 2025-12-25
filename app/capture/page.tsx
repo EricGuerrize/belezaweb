@@ -7,9 +7,11 @@ import { Card, CardContent } from '@/components/ui/card'
 import { motion } from 'framer-motion'
 import { Upload, Camera, X } from 'lucide-react'
 import { useImageStore } from '@/store/image-store'
+import { useRefreshRedirect } from '@/hooks/useRefreshRedirect'
 import BackButton from '@/components/navigation/BackButton'
 
 export default function CapturePage() {
+  useRefreshRedirect() // Redireciona para home ao atualizar página
   const router = useRouter()
   const { setCapturedImage } = useImageStore()
   const [image, setImage] = useState<string | null>(null)

@@ -8,7 +8,9 @@ import { motion } from 'framer-motion'
 import { Clock, Sparkles } from 'lucide-react'
 import BackButton from '@/components/navigation/BackButton'
 
+import { useRefreshRedirect } from '@/hooks/useRefreshRedirect'
 export default function RoutinePage() {
+  useRefreshRedirect() // Redireciona para home ao atualizar página
   const calculateTotalTime = (steps: typeof mockRoutine.morning) => {
     return steps.reduce((total, step) => total + (step.waitTime || 0), 0)
   }

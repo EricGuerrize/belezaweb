@@ -8,7 +8,9 @@ import { motion } from 'framer-motion'
 import { Check, Sparkles, Target, TrendingUp, Shield } from 'lucide-react'
 import BackButton from '@/components/navigation/BackButton'
 
+import { useRefreshRedirect } from '@/hooks/useRefreshRedirect'
 export default function OfferPage() {
+  useRefreshRedirect() // Redireciona para home ao atualizar página
   const router = useRouter()
   const benefits = [
     'Baseado na análise da sua pele',

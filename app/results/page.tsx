@@ -9,12 +9,14 @@ import { mockAnalysis } from '@/lib/mock-data/skin-analysis'
 import { useEffect, useState } from 'react'
 import { useImageStore } from '@/store/image-store'
 import { useResetApp } from '@/lib/reset-app'
+import { useRefreshRedirect } from '@/hooks/useRefreshRedirect'
 import { motion } from 'framer-motion'
 import { Target, TrendingUp, RefreshCw } from 'lucide-react'
 import BackButton from '@/components/navigation/BackButton'
 import BeforeAfterSlider from '@/components/features/BeforeAfterSlider'
 
 export default function ResultsPage() {
+  useRefreshRedirect() // Redireciona para home ao atualizar página
   const router = useRouter()
   const { capturedImage } = useImageStore()
   const { resetWithConfirmation } = useResetApp()

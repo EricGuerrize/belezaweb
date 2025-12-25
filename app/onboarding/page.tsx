@@ -5,6 +5,7 @@ import { useRouter } from 'next/navigation'
 import { Button } from '@/components/ui/button'
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
 import { useOnboardingStore } from '@/store/onboarding-store'
+import { useRefreshRedirect } from '@/hooks/useRefreshRedirect'
 import { SkinType, SkinConcern } from '@/lib/mock-data/onboarding'
 import { motion, AnimatePresence } from 'framer-motion'
 import Step1 from '@/components/features/onboarding/Step1'
@@ -15,6 +16,7 @@ import Step5 from '@/components/features/onboarding/Step5'
 import BackButton from '@/components/navigation/BackButton'
 
 export default function OnboardingPage() {
+  useRefreshRedirect() // Redireciona para home ao atualizar página
   const router = useRouter()
   const { currentStep, nextStep, previousStep, data } = useOnboardingStore()
 
