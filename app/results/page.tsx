@@ -65,7 +65,7 @@ export default function ResultsPage() {
       <div className="container mx-auto max-w-6xl">
         {/* Back Button */}
         <div className="mb-4">
-          <BackButton href="/analyzing" />
+          <BackButton href="/capture" />
         </div>
 
         {/* Header */}

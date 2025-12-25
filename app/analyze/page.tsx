@@ -254,14 +254,6 @@ export default function AnalyzePage() {
             <span className="text-center">Sua foto não será visível para ninguém</span>
           </div>
 
-          <div className="text-center mt-4 sm:mt-6">
-            <button
-              onClick={() => router.push('/results')}
-              className="text-sm sm:text-base text-primary hover:underline"
-            >
-              Pular por enquanto
-            </button>
-          </div>
         </motion.div>
       </div>
     </div>

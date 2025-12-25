@@ -5,6 +5,7 @@ import { useRouter } from 'next/navigation'
 import { motion } from 'framer-motion'
 import { Card, CardContent } from '@/components/ui/card'
 import { Progress } from '@/components/ui/progress'
+import { Button } from '@/components/ui/button'
 import BackButton from '@/components/navigation/BackButton'
 
 const analyzingSteps = [
@@ -20,6 +21,18 @@ export default function AnalyzingPage() {
   const router = useRouter()
   const [currentStep, setCurrentStep] = useState(0)
   const [progress, setProgress] = useState(0)
+  const [canSkip, setCanSkip] = useState(false)
+
+  const handleSkipToResults = () => {
+    router.push('/results')
+  }
+
+  useEffect(() => {
+    // Permitir pular após 50% do progresso
+    if (progress >= 50) {
+      setCanSkip(true)
+    }
+  }, [progress])
 
   useEffect(() => {
     const totalSteps = analyzingSteps.length
@@ -98,6 +111,24 @@ export default function AnalyzingPage() {
               <Progress value={progress} className="h-2 sm:h-3" />
               <p className="text-xs sm:text-sm text-gray-600">{Math.round(progress)}%</p>
             </div>
+
+            {/* Skip Button - Aparece após 50% */}
+            {canSkip && (
+              <motion.div
+                initial={{ opacity: 0, y: 10 }}
+                animate={{ opacity: 1, y: 0 }}
+                className="pt-4"
+              >
+                <Button
+                  onClick={handleSkipToResults}
+                  variant="outline"
+                  size="lg"
+                  className="w-full sm:w-auto"
+                >
+                  Ver resultados agora
+                </Button>
+              </motion.div>
+            )}
 
             {/* Privacy Note */}
             <div className="pt-4 sm:pt-6 md:pt-8 px-4">

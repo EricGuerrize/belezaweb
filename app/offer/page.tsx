@@ -1,5 +1,6 @@
 'use client'
 
+import { useRouter } from 'next/navigation'
 import { Button } from '@/components/ui/button'
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
 import { mockAnalysis } from '@/lib/mock-data/skin-analysis'
@@ -8,6 +9,7 @@ import { Check, Sparkles, Target, TrendingUp, Shield } from 'lucide-react'
 import BackButton from '@/components/navigation/BackButton'
 
 export default function OfferPage() {
+  const router = useRouter()
   const benefits = [
     'Baseado na análise da sua pele',
     'Personalizado para melhorias significativas',
@@ -20,7 +22,7 @@ export default function OfferPage() {
       <div className="container mx-auto max-w-5xl">
         {/* Back Button */}
         <div className="mb-4">
-          <BackButton href="/routine" />
+          <BackButton onClick={() => router.back()} />
         </div>
 
         {/* Header */}
