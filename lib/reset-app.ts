@@ -1,11 +1,13 @@
 import { useOnboardingStore } from '@/store/onboarding-store'
 import { useImageStore } from '@/store/image-store'
+import { ensureSession } from './session'
 
 /**
  * Reseta todos os dados da aplicação
  * - Limpa dados do onboarding
  * - Remove imagem capturada
  * - Limpa localStorage
+ * - Renova sessão
  */
 export const resetApp = () => {
   // Reset stores
@@ -23,6 +25,9 @@ export const resetApp = () => {
         localStorage.removeItem(key)
       }
     })
+
+    // Renova a sessão para permitir novo fluxo
+    ensureSession()
   }
 }
 

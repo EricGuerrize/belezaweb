@@ -7,10 +7,14 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/com
 import { motion } from 'framer-motion'
 import { Camera } from 'lucide-react'
 import { resetApp } from '@/lib/reset-app'
+import { ensureSession } from '@/lib/session'
 
 export default function Home() {
   // Limpar cache quando voltar para home
   useEffect(() => {
+    // Garante que há uma sessão ativa
+    ensureSession()
+
     // Detecta se o usuário está voltando (navegação, não primeira visita)
     const hasVisited = sessionStorage.getItem('hasVisited')
 
