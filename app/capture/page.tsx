@@ -15,8 +15,11 @@ export default function CapturePage() {
   const [image, setImage] = useState<string | null>(null)
   const [isDragging, setIsDragging] = useState(false)
   const [error, setError] = useState<string | null>(null)
+  const [showCamera, setShowCamera] = useState(false)
   const fileInputRef = useRef<HTMLInputElement>(null)
-  const cameraInputRef = useRef<HTMLInputElement>(null)
+  const videoRef = useRef<HTMLVideoElement>(null)
+  const canvasRef = useRef<HTMLCanvasElement>(null)
+  const streamRef = useRef<MediaStream | null>(null)
 
   // Avisar ao sair da página com foto capturada
   useEffect(() => {
@@ -30,6 +33,13 @@ export default function CapturePage() {
     window.addEventListener('beforeunload', handleBeforeUnload)
     return () => window.removeEventListener('beforeunload', handleBeforeUnload)
   }, [image])
+
+  // Cleanup da câmera ao desmontar
+  useEffect(() => {
+    return () => {
+      stopCamera()
+    }
+  }, [])
 
   const handleFileSelect = (file: File) => {
     if (file && file.type.startsWith('image/')) {
@@ -71,10 +81,66 @@ export default function CapturePage() {
     e.target.value = ''
   }
 
-  const handleCameraInput = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const file = e.target.files?.[0]
-    if (file) handleFileSelect(file)
-    e.target.value = ''
+  const startCamera = async () => {
+    try {
+      setError(null)
+
+      if (!navigator.mediaDevices || !navigator.mediaDevices.getUserMedia) {
+        setError('Seu navegador não suporta acesso à câmera. Tente usar um navegador mais recente.')
+        return
+      }
+
+      const stream = await navigator.mediaDevices.getUserMedia({
+        video: {
+          facingMode: 'user',
+          width: { ideal: 1280, max: 1920 },
+          height: { ideal: 720, max: 1080 }
+        },
+        audio: false
+      })
+
+      streamRef.current = stream
+      if (videoRef.current) {
+        videoRef.current.srcObject = stream
+        await videoRef.current.play()
+        setShowCamera(true)
+      }
+    } catch (err: any) {
+      console.error('Erro ao acessar câmera:', err)
+      if (err.name === 'NotAllowedError' || err.name === 'PermissionDeniedError') {
+        setError('Permissão de câmera negada. Por favor, permita o acesso à câmera nas configurações do navegador.')
+      } else if (err.name === 'NotFoundError' || err.name === 'DevicesNotFoundError') {
+        setError('Nenhuma câmera encontrada. Verifique se há uma câmera conectada.')
+      } else {
+        setError('Não foi possível acessar a câmera. Verifique as permissões do navegador.')
+      }
+    }
+  }
+
+  const stopCamera = () => {
+    if (streamRef.current) {
+      streamRef.current.getTracks().forEach(track => track.stop())
+      streamRef.current = null
+    }
+    setShowCamera(false)
+  }
+
+  const capturePhoto = () => {
+    if (videoRef.current && canvasRef.current) {
+      const canvas = canvasRef.current
+      const video = videoRef.current
+      canvas.width = video.videoWidth
+      canvas.height = video.videoHeight
+      const ctx = canvas.getContext('2d')
+      if (ctx) {
+        ctx.drawImage(video, 0, 0)
+        const dataUrl = canvas.toDataURL('image/jpeg', 0.95)
+        setImage(dataUrl)
+        setCapturedImage(dataUrl)
+        stopCamera()
+        setError(null)
+      }
+    }
   }
 
   const handleContinue = () => {
@@ -107,7 +173,52 @@ export default function CapturePage() {
 
           <Card className="mb-4 sm:mb-6">
             <CardContent className="pt-4 sm:pt-6 p-4 sm:p-6">
-              {!image ? (
+              {showCamera ? (
+                <div className="space-y-4">
+                  <div className="relative rounded-xl overflow-hidden bg-black aspect-[3/4] max-w-2xl mx-auto">
+                    <video
+                      ref={videoRef}
+                      autoPlay
+                      playsInline
+                      muted
+                      className="w-full h-full object-cover scale-x-[-1]"
+                    />
+                    <button
+                      onClick={stopCamera}
+                      className="absolute top-3 right-3 sm:top-4 sm:right-4 w-10 h-10 rounded-full bg-black/60 hover:bg-black/80 flex items-center justify-center text-white transition-colors z-10"
+                      aria-label="Fechar câmera"
+                    >
+                      <X className="w-5 h-5" />
+                    </button>
+                    {/* Grid de guia */}
+                    <div className="absolute inset-0 pointer-events-none">
+                      <div className="w-full h-full grid grid-cols-3 grid-rows-3 opacity-30">
+                        {[...Array(9)].map((_, i) => (
+                          <div key={i} className="border border-white/30" />
+                        ))}
+                      </div>
+                    </div>
+                  </div>
+                  <div className="flex flex-col sm:flex-row gap-3 sm:gap-4 max-w-2xl mx-auto">
+                    <Button
+                      variant="outline"
+                      onClick={stopCamera}
+                      className="w-full sm:flex-1"
+                    >
+                      Cancelar
+                    </Button>
+                    <Button
+                      onClick={capturePhoto}
+                      size="lg"
+                      className="w-full sm:flex-1"
+                    >
+                      <Camera className="w-5 h-5 mr-2" />
+                      Capturar Foto
+                    </Button>
+                  </div>
+                  <canvas ref={canvasRef} className="hidden" />
+                </div>
+              ) : !image ? (
                 <div
                   onDrop={handleDrop}
                   onDragOver={handleDragOver}
@@ -141,11 +252,11 @@ export default function CapturePage() {
                       </Button>
                       <Button
                         variant="default"
-                        onClick={() => cameraInputRef.current?.click()}
+                        onClick={startCamera}
                         className="flex items-center justify-center gap-2 w-full"
                       >
                         <Camera className="w-4 h-4 sm:w-5 sm:h-5" />
-                        <span className="text-sm sm:text-base">Tirar Selfie</span>
+                        <span className="text-sm sm:text-base">Abrir Câmera</span>
                       </Button>
                     </div>
                     <input
@@ -153,14 +264,6 @@ export default function CapturePage() {
                       type="file"
                       accept="image/*"
                       onChange={handleFileInput}
-                      className="hidden"
-                    />
-                    <input
-                      ref={cameraInputRef}
-                      type="file"
-                      accept="image/*"
-                      capture="user"
-                      onChange={handleCameraInput}
                       className="hidden"
                     />
                   </div>
