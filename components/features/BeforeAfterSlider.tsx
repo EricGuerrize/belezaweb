@@ -78,11 +78,56 @@ export default function BeforeAfterSlider({
           className="absolute inset-0 overflow-hidden"
           style={{ clipPath: `inset(0 0 0 ${sliderPosition}%)` }}
         >
+          {/* Imagem base com enhancement */}
           {/* eslint-disable-next-line @next/next/no-img-element */}
           <img
             src={afterImage}
             alt={afterLabel}
             className="w-full h-full object-cover"
+            style={{
+              filter: 'brightness(1.15) contrast(1.2) saturate(1.25)',
+              transform: 'scale(1.01)',
+            }}
+          />
+          
+          {/* Camada de suavização (simula redução de rugas e imperfeições) */}
+          <div 
+            className="absolute inset-0"
+            style={{
+              background: `url(${afterImage})`,
+              backgroundSize: 'cover',
+              backgroundPosition: 'center',
+              filter: 'blur(1.5px) brightness(1.1)',
+              opacity: 0.3,
+              mixBlendMode: 'soft-light',
+            }}
+          />
+          
+          {/* Overlay de brilho e iluminação melhorada */}
+          <div 
+            className="absolute inset-0"
+            style={{
+              background: 'radial-gradient(ellipse at center, rgba(255,255,255,0.15) 0%, rgba(255,255,255,0) 70%)',
+              mixBlendMode: 'overlay',
+            }}
+          />
+          
+          {/* Overlay de melhoria de textura */}
+          <div 
+            className="absolute inset-0"
+            style={{
+              background: 'linear-gradient(180deg, rgba(255,255,255,0.08) 0%, rgba(255,255,255,0) 30%, rgba(255,255,255,0) 70%, rgba(255,255,255,0.05) 100%)',
+              mixBlendMode: 'soft-light',
+            }}
+          />
+          
+          {/* Overlay de saturação e vivacidade */}
+          <div 
+            className="absolute inset-0"
+            style={{
+              background: 'linear-gradient(135deg, rgba(232,180,184,0.1) 0%, rgba(255,255,255,0) 50%, rgba(168,213,186,0.08) 100%)',
+              mixBlendMode: 'color',
+            }}
           />
         </div>
 
